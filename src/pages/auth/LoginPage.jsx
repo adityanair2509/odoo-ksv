@@ -95,9 +95,10 @@ export default function LoginPage() {
           <p className="text-xs text-text-muted font-medium mb-1.5">Demo accounts</p>
           <div className="flex flex-col gap-1">
             {[
-              { email: 'admin@vendorbridge.in', role: 'Admin' },
-              { email: 'manager@vendorbridge.in', role: 'Manager' },
-              { email: 'vendor@vendorbridge.in', role: 'Vendor' },
+              { email: 'admin@vendorbridge.in',       role: 'Admin' },
+              { email: 'procurement@vendorbridge.in', role: 'Procurement Officer' },
+              { email: 'manager@vendorbridge.in',     role: 'Manager' },
+              { email: 'vendor@vendorbridge.in',      role: 'Vendor' },
             ].map((d) => (
               <p key={d.email} className="text-xs text-text-muted">
                 <span className="text-text-secondary font-medium">{d.role}:</span>{' '}

@@ -2,11 +2,40 @@ import api from './api'
 
 const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true'
 
-/** Mock users for demo */
+/** Mock users for demo — 4 roles */
 const MOCK_USERS = [
-  { id: 'u1', name: 'Admin User', email: 'admin@vendorbridge.in', role: 'admin', password: 'demo123' },
-  { id: 'u2', name: 'Sunita Mehta', email: 'manager@vendorbridge.in', role: 'manager', password: 'demo123' },
-  { id: 'u3', name: 'Vendor Partner', email: 'vendor@vendorbridge.in', role: 'vendor', password: 'demo123' },
+  {
+    id: 'u1',
+    name: 'Admin User',
+    email: 'admin@vendorbridge.in',
+    role: 'admin',
+    password: 'demo123',
+    avatar: 'A',
+  },
+  {
+    id: 'u2',
+    name: 'Priya Mehta',
+    email: 'procurement@vendorbridge.in',
+    role: 'procurement_officer',
+    password: 'demo123',
+    avatar: 'P',
+  },
+  {
+    id: 'u3',
+    name: 'Rohit Agarwal',
+    email: 'manager@vendorbridge.in',
+    role: 'manager',
+    password: 'demo123',
+    avatar: 'R',
+  },
+  {
+    id: 'u4',
+    name: 'Vendor Partner',
+    email: 'vendor@vendorbridge.in',
+    role: 'vendor',
+    password: 'demo123',
+    avatar: 'V',
+  },
 ]
 
 /**

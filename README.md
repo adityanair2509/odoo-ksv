@@ -1,164 +1,229 @@
-# odoo-ksv — Vendor Bridge
+# VendorBridge
 
-A full-stack procurement workflow app: React + Vite frontend, Node + Express + TypeScript backend with JWT auth and an in-memory data store seeded from the original frontend mocks.
+**Procurement & vendor management ERP** for organizations that need a clear, end-to-end workflow — from vendor onboarding and RFQs through quotation comparison, manager approvals, purchase orders, and invoicing.
+
+Built as a modern full-stack web app with role-based access, live dashboards, email notifications, and persistent PostgreSQL storage in production.
+
+---
+
+## Live demo
+
+| Service | URL |
+|---------|-----|
+| Frontend | [https://odoo-ksv-beta-3.vercel.app](https://odoo-ksv-beta-3.vercel.app) |
+| API | [https://odoo-ksv-production.up.railway.app](https://odoo-ksv-production.up.railway.app) |
+| Health check | [https://odoo-ksv-production.up.railway.app/api/health](https://odoo-ksv-production.up.railway.app/api/health) |
+
+** admin (first boot)**
+
+| Email | Password |
+|-------|----------|
+| `shreenathpillai1696@gmail.com` | `Admin@123` |
+
+Change the admin password after your first login in production.
+
+---
+
+## Team
+
+| Name | Role |
+|------|------|
+| **Aryan Kumar** | Frontend Designer |
+| **Tanay Sagar** | Database Engineer & Frontend Developer |
+| **Shreenath Pillai** | Backend Designer & Developer |
+| **Aditya Nair** | Backend Designer & Developer |
+
+---
+
+## Features
+
+### Procurement workflow
+- **RFQ management** — create RFQs, assign vendors, track status from draft to awarded
+- **Quotation comparison** — side-by-side vendor quotes with AI-style summary and vendor switching
+- **Manager approvals** — approval chain tied to the procurement officer and selected vendor, with 1–5 star vendor ratings
+- **Purchase orders** — auto-generated POs after approval, with vendor registration details on record
+- **Invoices** — PDF generation, email delivery, and payment tracking
+
+### Vendor management
+- **Vendor directory** — searchable list with registration details (contact, email, phone, country)
+- **Vendor registration** — self-service signup with admin approval before login
+- **GSTIN verification** — validate vendor tax IDs during onboarding
+
+### Platform
+- **Role-based access** — Admin, Procurement Officer, Manager, and Vendor roles
+- **OTP & email** — Gmail SMTP for registration, approval, and invoice notifications
+- **Live dashboards & reports** — charts and KPIs backed by real API data (no mock mode in production)
+- **Persistent storage** — PostgreSQL in production; local JSON file fallback for development
+- **JWT authentication** — stateless auth with bcrypt password hashing
+
+---
 
 ## Architecture
 
 ```
-c:\odoo ksv\
-├── src/                     # React + Vite frontend (port 5173)
-│   ├── services/            # Each service file has USE_MOCK branch + real API call
-│   ├── mock/                # Original mock data (still used to seed the backend)
-│   └── pages/ components/   # UI
-├── server/                  # Node + Express + TypeScript backend (port 8000)
+odoo-ksv-beta-3/
+├── src/                          # React + Vite frontend
+│   ├── pages/                    # Dashboard, RFQs, quotations, approvals, invoices, vendors…
+│   ├── components/               # Shared UI (StarRating, layout, forms)
+│   ├── services/                 # API client (axios)
+│   └── mock/                     # Legacy seed data (dev only)
+├── server/                       # Express + TypeScript API
 │   ├── src/
-│   │   ├── index.ts         # Express bootstrap, CORS, route mount
-│   │   ├── env.ts           # Zod-validated env loader
-│   │   ├── auth.ts          # JWT sign/verify + requireAuth/requireRole middleware
-│   │   ├── errors.ts        # AppError class + global error handler
-│   │   ├── db.ts            # In-memory data layer (swappable for real DB)
-│   │   ├── db.seed.ts       # Static seed data (mirrors src/mock/*)
-│   │   ├── types.ts         # Vendor, RFQ, Quotation, PO, Invoice, Approval, User
-│   │   └── routes/          # auth, vendors, rfqs, quotations, purchaseOrders, invoices, approvals
-│   ├── .env                 # PORT, JWT_SECRET, ALLOWED_ORIGINS
-│   ├── package.json         # Independent from frontend
-│   └── smoke-test.ps1       # PowerShell smoke test (20 tests)
-├── .env                     # VITE_USE_MOCK=false, VITE_API_BASE_URL=http://localhost:8000/api
-└── package.json             # Frontend
+│   │   ├── index.ts              # App bootstrap, CORS, routes
+│   │   ├── db.ts                 # Data layer (PostgreSQL or in-memory)
+│   │   ├── persistence.ts        # JSON / PostgreSQL persistence
+│   │   ├── emailService.ts       # SMTP notifications & invoice emails
+│   │   ├── routes/               # auth, vendors, rfqs, quotations, POs, invoices, approvals
+│   │   └── scripts/migrate.ts    # Database migration
+│   ├── database/                 # Railway PostgreSQL bootstrap SQL
+│   └── railway.toml              # Railway deploy config
+├── vercel.json                   # Vercel frontend config
+├── DEPLOY.md                     # Full deployment guide
+└── package.json                  # Frontend dependencies
 ```
 
-## Quick start
+### Deployment topology
+
+| Layer | Platform | Details |
+|-------|----------|---------|
+| Frontend | **Vercel** | Static Vite build from repo root |
+| API | **Railway** | Express server from `server/` |
+| Database | **Railway PostgreSQL** | App state in `app_store` table |
+
+See [DEPLOY.md](./DEPLOY.md) for step-by-step deployment instructions.
+
+---
+
+## Tech stack
+
+| Layer | Technologies |
+|-------|--------------|
+| Frontend | React 19, Vite, TypeScript, Tailwind CSS, React Router, Recharts, Axios, jsPDF |
+| Backend | Node.js, Express, TypeScript, Zod validation |
+| Database | PostgreSQL (production), JSON file / in-memory (local dev) |
+| Auth | JWT, bcrypt |
+| Email | Nodemailer + Gmail SMTP |
+| PDF | PDFKit |
+
+---
+
+## Quick start (local development)
 
 You need **two terminals** running at the same time.
 
 ### Terminal 1 — Backend
 
 ```powershell
-cd "c:\odoo ksv\server"
-npm install          # only the first time
-npm run dev          # starts on http://localhost:8000
+cd server
+npm install
+npm run dev          # http://localhost:8000
 ```
 
 ### Terminal 2 — Frontend
 
 ```powershell
-cd "c:\odoo ksv"
-npm install          # only the first time
-npm run dev          # starts on http://localhost:5173
+npm install
+npm run dev          # http://localhost:5173
 ```
 
-Then open <http://localhost:5173> in your browser and log in.
+Open [http://localhost:5173](http://localhost:5173) and log in with the admin credentials above.
 
-## Demo accounts
+### Optional — PostgreSQL locally
 
-All passwords are `demo123`.
+Set `DATABASE_URL` in `server/.env` to use PostgreSQL instead of the local JSON store. Without it, the API falls back to `server/data/store.json`.
 
-| Email | Role | What they can do |
-|---|---|---|
-| `admin@vendorbridge.in` | `admin` | Everything |
-| `procurement@vendorbridge.in` | `procurement_officer` | Create/edit RFQs & vendors, select quotations, mark invoices paid |
-| `manager@vendorbridge.in` | `manager` | Approve / reject approvals, mark POs paid |
-| `vendor@vendorbridge.in` | `vendor` | Submit quotations against assigned RFQs |
+---
 
-## API
+## User roles
 
-All routes are mounted under `/api`. All non-auth routes require `Authorization: Bearer <token>`. See `server/src/routes/*.ts` for the full catalog.
+| Role | Capabilities |
+|------|--------------|
+| **Admin** | Approve registrations, manage users, full system access |
+| **Procurement Officer** | Create RFQs, manage vendors, compare quotations, select vendors |
+| **Manager** | Review and approve/reject requests, rate vendors (1–5 stars) |
+| **Vendor** | View assigned RFQs, submit quotations, track POs and invoices |
 
-| Resource | Endpoints |
-|---|---|
-| Auth | `POST /auth/login`, `GET /auth/me` |
-| Vendors | `GET /vendors`, `GET /vendors/:id`, `POST /vendors`, `PUT /vendors/:id`, `POST /vendors/verify-gstin` |
-| RFQs | `GET /rfqs`, `GET /rfqs/:id`, `POST /rfqs`, `POST /rfqs/:id/send` |
-| Quotations | `GET /quotations/rfqs/:rfqId/quotations`, `POST /quotations`, `POST /quotations/:id/select` |
-| Purchase Orders | `GET /purchase-orders`, `GET /purchase-orders/:id`, `POST /purchase-orders/:id/mark-paid` |
-| Invoices | `GET /invoices/po/:poId`, `GET /invoices/:id`, `POST /invoices/:id/mark-paid` |
-| Approvals | `GET /approvals`, `GET /approvals/:id`, `POST /approvals/:id/approve`, `POST /approvals/:id/reject` |
-| Misc | `GET /health` |
+---
 
-Total: **24 endpoints across 7 resources**.
+## API overview
 
-### Standard error envelope
+All routes are under `/api`. Protected routes require `Authorization: Bearer <token>`.
 
-Every error response has the shape:
+| Resource | Key endpoints |
+|----------|---------------|
+| Auth | `POST /auth/login`, `GET /auth/me`, `POST /auth/register` |
+| Vendors | `GET /vendors`, `POST /vendors`, `POST /vendors/verify-gstin` |
+| RFQs | `GET /rfqs`, `POST /rfqs`, `POST /rfqs/:id/send` |
+| Quotations | `GET /quotations/rfqs/:rfqId/quotations`, `POST /quotations/:id/select` |
+| Purchase Orders | `GET /purchase-orders`, `POST /purchase-orders/:id/mark-paid` |
+| Invoices | `GET /invoices/:id`, `POST /invoices/:id/send-email`, `GET /invoices/:id/pdf` |
+| Approvals | `GET /approvals`, `POST /approvals/:id/approve`, `POST /approvals/:id/reject` |
+| Health | `GET /health` |
+
+### Error format
 
 ```json
 { "message": "Human readable", "code": "MACHINE_CODE", "details": "..." }
 ```
 
-| Status | When |
-|---|---|
-| `400` | Validation failed (zod) |
-| `401` | Missing/invalid token |
-| `403` | Authenticated but role not allowed |
+| Status | Meaning |
+|--------|---------|
+| `400` | Validation failed |
+| `401` | Missing or invalid token |
+| `403` | Insufficient role permissions |
 | `404` | Resource not found |
-| `500` | Unhandled error |
+| `500` | Server error |
 
-### Quick smoke test
-
-```powershell
-cd "c:\odoo ksv\server"
-powershell -ExecutionPolicy Bypass -File smoke-test.ps1
-```
-
-Expected output: `PASSED: 20, FAILED: 0`.
-
-## Switching the frontend back to mock mode
-
-If you want to develop the UI without the backend running, edit `.env` at the repo root and set:
-
-```env
-VITE_USE_MOCK=true
-```
-
-Then restart `npm run dev`. The frontend's `src/services/*.js` files each check this flag and serve from `src/mock/*.js` instead of hitting the API.
-
-## Database
-
-The backend currently uses an **in-memory data layer** (`server/src/db.ts`) that seeds itself from `server/src/db.seed.ts` on every server start. All state is lost on restart.
-
-To plug in a real database:
-
-1. Add your DB driver + ORM to `server/package.json` (e.g. `better-sqlite3` + raw SQL, or `prisma` + `@prisma/client`).
-2. Implement the same `db.users`, `db.vendors`, `db.rfqs`, `db.quotations`, `db.purchaseOrders`, `db.invoices`, `db.approvals` interface that `server/src/db.ts` currently exposes.
-3. Replace the in-memory implementation. **No route handler needs to change** — they all depend only on the `db` object.
-4. Move `db.seed.ts` to a proper migration / seed script for your chosen DB.
-
-## Tech stack
-
-| Layer | Choice | Why |
-|---|---|---|
-| Frontend | React 19 + Vite + TypeScript + Tailwind + axios + recharts | Already in the project |
-| Backend | Node 20 + Express 4 + TypeScript | Lightest, no native build, fastest start |
-| Auth | JWT (`jsonwebtoken`) + bcrypt | Stateless, easy to inspect, no extra services |
-| Validation | Zod | Shared types, ergonomic error messages |
-| CORS | `cors` middleware, allow-list per env | Standard |
-| Data | In-memory `let` arrays | Zero setup, swappable |
+---
 
 ## Environment variables
 
 ### `server/.env`
 
-| Var | Default | Purpose |
-|---|---|---|
-| `PORT` | `8000` | HTTP port |
-| `JWT_SECRET` | (required, ≥16 chars) | Signs JWTs — **change for production** |
-| `JWT_EXPIRES_IN` | `7d` | Token lifetime |
-| `ALLOWED_ORIGINS` | `http://localhost:5173,http://localhost:3000` | CORS allow-list (comma-separated) |
+| Variable | Purpose |
+|----------|---------|
+| `PORT` | HTTP port (default `8000`) |
+| `JWT_SECRET` | Signs JWTs — use a long random string in production |
+| `ALLOWED_ORIGINS` | CORS allow-list (comma-separated) |
+| `APP_URL` | Frontend URL for email links |
+| `DATABASE_URL` | PostgreSQL connection string (optional locally) |
+| `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD` | Email delivery |
 
-### `.env` (frontend)
+### `.env` (frontend root)
 
-| Var | Default | Purpose |
-|---|---|---|
-| `VITE_USE_MOCK` | `false` | When `true`, frontend uses in-process mocks; when `false`, calls the backend |
-| `VITE_API_BASE_URL` | `http://localhost:8000/api` | Where the frontend sends real requests |
+| Variable | Purpose |
+|----------|---------|
+| `VITE_API_BASE_URL` | Backend API base URL (default `http://localhost:8000/api`) |
+| `VITE_USE_MOCK` | Set `true` to use in-process mocks without the backend |
+
+---
 
 ## Scripts
 
-| Command | Where | What it does |
-|---|---|---|
-| `npm run dev` | frontend | Vite dev server with HMR |
-| `npm run build` | frontend | Type-check + production bundle |
-| `npm run dev` | `server/` | `tsx watch src/index.ts` — auto-reload on save |
-| `npm run build` | `server/` | `tsc` — compile to `dist/` |
-| `npm start` | `server/` | `node dist/index.js` — run compiled server |
-| `npm run typecheck` | `server/` | `tsc --noEmit` — no emit, just type-check |
+| Command | Where | Description |
+|---------|-------|-------------|
+| `npm run dev` | root | Vite dev server with HMR |
+| `npm run build` | root | Type-check + production frontend bundle |
+| `npm run dev` | `server/` | API with hot reload (`tsx watch`) |
+| `npm run build` | `server/` | Compile TypeScript to `dist/` |
+| `npm run start:prod` | `server/` | Migrate DB, then start API |
+| `npm run db:migrate` | `server/` | Run database migration manually |
+
+### Smoke test
+
+```powershell
+cd server
+powershell -ExecutionPolicy Bypass -File smoke-test.ps1
+```
+
+---
+
+## Repository
+
+GitHub: [adityanair2509/odoo-ksv](https://github.com/adityanair2509/odoo-ksv)
+
+---
+
+## License
+
+Private project — all rights reserved.

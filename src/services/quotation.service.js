@@ -9,7 +9,7 @@ export const getQuotationsByRFQ = async (rfqId) => {
     await new Promise((r) => setTimeout(r, 400))
     return mockQuotations.filter((q) => q.rfqId === rfqId)
   }
-  const { data } = await api.get(`/rfqs/${rfqId}/quotations`)
+  const { data } = await api.get(`/quotations/rfqs/${rfqId}/quotations`)
   return data
 }
 
@@ -32,3 +32,14 @@ export const selectQuotation = async (quotationId) => {
   const { data } = await api.post(`/quotations/${quotationId}/select`)
   return data
 }
+
+/** @returns {Promise<Array>} */
+export const getQuotations = async () => {
+  if (USE_MOCK) {
+    await new Promise((r) => setTimeout(r, 400))
+    return mockQuotations
+  }
+  const { data } = await api.get('/quotations')
+  return data
+}
+

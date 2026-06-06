@@ -85,9 +85,26 @@ export default function CreateRFQPage() {
     setSubmitting(true)
     try {
       const formData = getValues()
+
+      // Build a clean payload that satisfies the backend's Zod schema:
+      //  - drop empty line items
+      //  - coerce quantity from string -> positive integer
+      //  - always include createdBy from the authenticated user (defense in depth)
+      const cleanLineItems = lineItems
+        .filter((li) => li.name && li.quantity !== '' && li.quantity != null)
+        .map(({ id, ...li }) => ({ ...li, quantity: Number(li.quantity) }))
+
+      if (cleanLineItems.length === 0) {
+        setItemError('Add at least one line item with a name and quantity.')
+        setSubmitting(false)
+        return
+      }
+
       await createRFQ({
         ...formData,
-        lineItems: lineItems.map(({ id, ...li }) => li),
+        description: formData.description?.trim() || '',
+        createdBy: user?.id,
+        lineItems: cleanLineItems,
         assignedVendors: selectedVendors.map((v) => v.id),
         status: 'sent',
       })
@@ -105,8 +122,16 @@ export default function CreateRFQPage() {
         )
       } else if (status === 401) {
         setSubmitError('Your session has expired. Please sign in again.')
-      } else if (status === 400 && backendMessage) {
-        setSubmitError(`Validation error: ${backendMessage}`)
+      } else if (status === 400) {
+        const details = err?.response?.data?.details
+        if (details?.fieldErrors) {
+          const fieldErrors = Object.entries(details.fieldErrors)
+            .map(([field, msgs]) => `${field}: ${Array.isArray(msgs) ? msgs.join(', ') : msgs}`)
+            .join('\n')
+          setSubmitError(`Validation error:\n${fieldErrors}`)
+        } else {
+          setSubmitError(`Validation error: ${backendMessage || 'Invalid data submitted'}`)
+        }
       } else {
         setSubmitError(backendMessage || err?.message || 'Failed to create RFQ. Please try again.')
       }
@@ -186,11 +211,14 @@ export default function CreateRFQPage() {
             <div className="flex flex-col gap-1.5">
               <label className="text-xs uppercase tracking-wide text-text-muted font-medium">Description</label>
               <textarea
-                {...register('description')}
+                {...register('description', { required: 'Description is required' })}
                 rows={3}
                 placeholder="Describe the procurement requirement..."
                 className="w-full px-3 py-2 border border-border rounded-md text-sm focus:border-primary focus:outline-none resize-none"
               />
+              {errors.description && (
+                <p className="text-xs text-danger">{errors.description.message}</p>
+              )}
             </div>
           </div>
         )}

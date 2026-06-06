@@ -52,6 +52,8 @@ export function asyncHandler<TReq extends Request = Request, TRes extends Respon
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function errorHandler(err: unknown, _req: Request, res: Response, _next: NextFunction) {
     if (err instanceof ZodError) {
+        // eslint-disable-next-line no-console
+        console.error('❌ Zod validation failed:', JSON.stringify(err.flatten().fieldErrors, null, 2))
         res.status(400).json({
             message: 'Validation failed',
             code: 'VALIDATION_ERROR',

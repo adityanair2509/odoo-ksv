@@ -177,3 +177,14 @@ export interface Approval {
     remarks?: string
     decidedAt?: string | null
 }
+
+export interface ActivityEntry {
+    id: string
+    type: string
+    icon: string
+    title: string
+    description: string
+    user: string
+    timestamp: string
+}
+

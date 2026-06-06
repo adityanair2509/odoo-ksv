@@ -15,6 +15,8 @@ const LineItemSchema = z.object({
     unit: z.string().optional(),
 })
 
+// `createdBy` is intentionally NOT in this schema — it is taken from the
+// authenticated session (req.user.id) so clients cannot spoof another author.
 const RFQCreateSchema = z.object({
     title: z.string().min(1),
     category: z.string().min(1),
@@ -24,7 +26,6 @@ const RFQCreateSchema = z.object({
     description: z.string().min(1),
     assignedVendors: z.array(z.string()).default([]),
     lineItems: z.array(LineItemSchema).min(1),
-    createdBy: z.string().min(1),
 })
 
 /** GET /api/rfqs */
@@ -54,7 +55,9 @@ rfqsRouter.post(
     requireRole(...WRITE_ROLES),
     asyncHandler(async (req, res) => {
         const data = RFQCreateSchema.parse(req.body)
-        const created = await db.rfqs.create(data)
+        // Force the author to be the authenticated user; ignore any
+        // createdBy the client may have sent.
+        const created = await db.rfqs.create({ ...data, createdBy: req.user!.id })
         res.status(201).json(created)
     }),
 )
@@ -65,7 +68,7 @@ rfqsRouter.post(
     requireAuth,
     requireRole(...WRITE_ROLES),
     asyncHandler(async (req, res) => {
-        const updated = await db.rfqs.markSent(req.params.id)
+        const updated = await db.rfqs.markSent(req.params.id, req.user!.name)
         if (!updated) throw AppError.notFound('RFQ not found')
         res.json({ success: true })
     }),

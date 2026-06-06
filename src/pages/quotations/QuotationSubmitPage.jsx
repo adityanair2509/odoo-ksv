@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
-import { Plus, Trash2 } from 'lucide-react'
+import { AlertCircle } from 'lucide-react'
 import Button from '../../components/ui/Button'
 import Input from '../../components/ui/Input'
 import { submitQuotation } from '../../services/quotation.service'
@@ -15,7 +15,8 @@ export default function QuotationSubmitPage() {
   const [rfq, setRFQ] = useState(null)
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
-  const [lineItems, setLineItems] = useState([{ id: 1, name: '', unitPrice: '' }])
+  const [submitError, setSubmitError] = useState('')
+  const [lineItems, setLineItems] = useState([{ id: 1, name: '', quantity: 0, unitPrice: '' }])
 
   const { register, handleSubmit, formState: { errors } } = useForm()
 
@@ -35,17 +36,44 @@ export default function QuotationSubmitPage() {
 
   const onSubmit = async (data) => {
     setSubmitting(true)
+    setSubmitError('')
     try {
+      // Compute line item totals and grand total
+      const processedItems = lineItems.map((li) => ({
+        name: li.name,
+        quantity: Number(li.quantity) || 0,
+        unitPrice: Number(li.unitPrice) || 0,
+        total: (Number(li.quantity) || 0) * (Number(li.unitPrice) || 0),
+      }))
+
+      const subtotal = processedItems.reduce((sum, li) => sum + li.total, 0)
+      const gstPercent = Number(data.gstPercent) || 0
+      const grandTotal = subtotal + (subtotal * gstPercent / 100)
+
       await submitQuotation({
         rfqId: id,
         vendorId: user?.id,
         vendorName: user?.name,
-        ...data,
-        lineItems,
-        status: 'submitted',
-        submittedAt: new Date().toISOString(),
+        grandTotal,
+        gstPercent,
+        deliveryDays: Number(data.deliveryDays) || 0,
+        vendorRating: 0,
+        paymentTerms: data.paymentTerms,
+        lineItems: processedItems,
+        notes: data.notes || '',
       })
       navigate('/rfqs')
+    } catch (err) {
+      const msg = err?.response?.data?.message || err?.message || 'Failed to submit quotation'
+      const details = err?.response?.data?.details
+      if (details?.fieldErrors) {
+        const fieldErrors = Object.entries(details.fieldErrors)
+          .map(([field, msgs]) => `${field}: ${Array.isArray(msgs) ? msgs.join(', ') : msgs}`)
+          .join('\n')
+        setSubmitError(`${msg}\n${fieldErrors}`)
+      } else {
+        setSubmitError(msg)
+      }
     } finally {
       setSubmitting(false)
     }
@@ -62,6 +90,16 @@ export default function QuotationSubmitPage() {
         <h2 className="text-lg font-semibold text-text-primary">Submit Quotation</h2>
         <p className="text-sm text-text-muted mt-0.5">For: {rfq?.title}</p>
       </div>
+
+      {submitError && (
+        <div
+          role="alert"
+          className="flex items-start gap-3 bg-red-50 border border-red-200 text-danger rounded-lg p-4"
+        >
+          <AlertCircle size={18} className="mt-0.5 flex-shrink-0" />
+          <div className="text-sm leading-relaxed whitespace-pre-line">{submitError}</div>
+        </div>
+      )}
 
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
         <div className="bg-surface border border-border rounded-lg p-5 flex flex-col gap-4">
@@ -106,7 +144,7 @@ export default function QuotationSubmitPage() {
             </thead>
             <tbody>
               {lineItems.map((item) => {
-                const total = (item.quantity || 0) * (item.unitPrice || 0)
+                const total = (Number(item.quantity) || 0) * (Number(item.unitPrice) || 0)
                 return (
                   <tr key={item.id} className="border-b border-border last:border-0">
                     <td className="px-3 py-2 text-sm text-text-primary">{item.name}</td>
@@ -149,3 +187,4 @@ export default function QuotationSubmitPage() {
     </div>
   )
 }
+

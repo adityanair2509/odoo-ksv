@@ -18,6 +18,7 @@ import { quotationsRouter } from './routes/quotations.routes.js'
 import { purchaseOrdersRouter } from './routes/purchaseOrders.routes.js'
 import { invoicesRouter } from './routes/invoices.routes.js'
 import { approvalsRouter } from './routes/approvals.routes.js'
+import { activitiesRouter } from './routes/activities.routes.js'
 
 const app = express()
 
@@ -58,6 +59,7 @@ app.use('/api/quotations', quotationsRouter) // also exposes /api/quotations/rfq
 app.use('/api/purchase-orders', purchaseOrdersRouter)
 app.use('/api/invoices', invoicesRouter)
 app.use('/api/approvals', approvalsRouter)
+app.use('/api/activities', activitiesRouter)
 
 // ---------- 404 + error handler ----------
 

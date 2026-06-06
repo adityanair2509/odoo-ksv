@@ -8,6 +8,7 @@ import Tabs from '../../components/ui/Tabs'
 import Input from '../../components/ui/Input'
 import { getRFQs } from '../../services/rfq.service'
 import { formatDate } from '../../utils/formatDate'
+import { useRole } from '../../hooks/useRole'
 
 const TABS = [
   { label: 'All', key: 'all' },
@@ -17,52 +18,60 @@ const TABS = [
   { label: 'Pending', key: 'pending' },
 ]
 
-const COLUMNS = [
-  {
-    key: 'title',
-    label: 'RFQ Title',
-    render: (val) => <span className="font-medium text-text-primary">{val}</span>,
-  },
-  { key: 'category', label: 'Category' },
-  {
-    key: 'priority',
-    label: 'Priority',
-    render: (val) => {
-      const colors = { High: 'text-danger', Medium: 'text-warning', Low: 'text-success' }
-      return <span className={`text-xs font-medium ${colors[val] || 'text-text-muted'}`}>{val}</span>
+function buildColumns(isVendor) {
+  return [
+    {
+      key: 'title',
+      label: 'RFQ Title',
+      render: (val) => <span className="font-medium text-text-primary">{val}</span>,
     },
-  },
-  {
-    key: 'deadline',
-    label: 'Deadline',
-    render: (val) => formatDate(val),
-  },
-  {
-    key: 'quotationsReceived',
-    label: 'Quotations',
-    render: (val) => <span className="text-xs bg-background px-2 py-0.5 rounded border border-border">{val} received</span>,
-  },
-  {
-    key: 'status',
-    label: 'Status',
-    render: (val) => <Badge variant={val} />,
-  },
-  {
-    key: 'id',
-    label: 'Action',
-    render: (val, row) => (
-      <div className="flex gap-2">
-        <a href={`/rfqs/${val}`} className="text-xs text-text-secondary hover:text-text-primary">View</a>
-        {row.quotationsReceived > 0 && (
-          <a href={`/rfqs/${val}/compare`} className="text-xs text-primary hover:text-blue-700">Compare</a>
-        )}
-      </div>
-    ),
-  },
-]
+    { key: 'category', label: 'Category' },
+    {
+      key: 'priority',
+      label: 'Priority',
+      render: (val) => {
+        const colors = { High: 'text-danger', Medium: 'text-warning', Low: 'text-success' }
+        return <span className={`text-xs font-medium ${colors[val] || 'text-text-muted'}`}>{val}</span>
+      },
+    },
+    {
+      key: 'deadline',
+      label: 'Deadline',
+      render: (val) => formatDate(val),
+    },
+    {
+      key: 'quotationsReceived',
+      label: 'Quotations',
+      render: (val) => <span className="text-xs bg-background px-2 py-0.5 rounded border border-border">{val} received</span>,
+    },
+    {
+      key: 'status',
+      label: 'Status',
+      render: (val) => <Badge variant={val} />,
+    },
+    {
+      key: 'id',
+      label: 'Action',
+      render: (val, row) => (
+        <div className="flex gap-2">
+          <a href={`/rfqs/${val}`} className="text-xs text-text-secondary hover:text-text-primary">View</a>
+          {/* Vendor: show Submit Quote link for sent/pending RFQs */}
+          {isVendor && (row.status === 'sent' || row.status === 'pending') && (
+            <a href={`/quotations/${val}/submit`} className="text-xs text-primary hover:text-blue-700">Submit Quote</a>
+          )}
+          {/* Procurement Officer: show Compare link when quotations exist */}
+          {!isVendor && row.quotationsReceived > 0 && (
+            <a href={`/rfqs/${val}/compare`} className="text-xs text-primary hover:text-blue-700">Compare</a>
+          )}
+        </div>
+      ),
+    },
+  ]
+}
 
 export default function RFQsPage() {
   const navigate = useNavigate()
+  const { isVendor, canManageRFQs } = useRole()
   const [rfqs, setRFQs] = useState([])
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState('all')
@@ -84,16 +93,22 @@ export default function RFQsPage() {
     return matchesTab && matchesSearch
   })
 
+  const columns = buildColumns(isVendor)
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-start justify-between">
         <div>
           <h2 className="text-lg font-semibold text-text-primary">RFQs</h2>
-          <p className="text-sm text-text-muted mt-0.5">Manage request for quotations</p>
+          <p className="text-sm text-text-muted mt-0.5">
+            {isVendor ? 'View RFQs and submit quotations' : 'Manage request for quotations'}
+          </p>
         </div>
-        <Button variant="primary" size="sm" onClick={() => navigate('/rfqs/new')}>
-          + Create RFQ
-        </Button>
+        {canManageRFQs && (
+          <Button variant="primary" size="sm" onClick={() => navigate('/rfqs/new')}>
+            + Create RFQ
+          </Button>
+        )}
       </div>
 
       <div className="bg-surface border border-border rounded-lg">
@@ -109,8 +124,9 @@ export default function RFQsPage() {
             icon={<Search size={14} />}
           />
         </div>
-        <DataTable columns={COLUMNS} data={filtered} loading={loading} />
+        <DataTable columns={columns} data={filtered} loading={loading} />
       </div>
     </div>
   )
 }
+

@@ -1,17 +1,15 @@
 import { useEffect, useState } from 'react'
 import Timeline from '../components/ui/Timeline'
-import { mockActivity } from '../mock/mockActivity'
+import { getActivities } from '../services/activity.service'
 
 export default function ActivityPage() {
   const [entries, setEntries] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Simulate async fetch
-    setTimeout(() => {
-      setEntries(mockActivity)
-      setLoading(false)
-    }, 400)
+    getActivities()
+      .then(setEntries)
+      .finally(() => setLoading(false))
   }, [])
 
   return (

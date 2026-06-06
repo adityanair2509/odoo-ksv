@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import {
   BarChart,
   Bar,
@@ -12,30 +13,8 @@ import {
   Legend,
 } from 'recharts'
 import { formatINR } from '../utils/formatCurrency'
-
-const SPENDING_BY_CATEGORY = [
-  { category: 'IT', amount: 2900000 },
-  { category: 'Furniture', amount: 1875000 },
-  { category: 'Construction', amount: 1270000 },
-  { category: 'Logistics', amount: 340000 },
-  { category: 'Other', amount: 180000 },
-]
-
-const VENDOR_PERFORMANCE = [
-  { vendor: 'Infra Supplies', rating: 4.5, pos: 12 },
-  { vendor: 'TechSoft', rating: 4.8, pos: 7 },
-  { vendor: 'QuickMove', rating: 3.9, pos: 3 },
-  { vendor: 'FurnishPro', rating: 4.2, pos: 5 },
-]
-
-const MONTHLY_POS = [
-  { month: 'Jan', count: 2 },
-  { month: 'Feb', count: 4 },
-  { month: 'Mar', count: 3 },
-  { month: 'Apr', count: 6 },
-  { month: 'May', count: 5 },
-  { month: 'Jun', count: 3 },
-]
+import { getPurchaseOrders } from '../services/order.service'
+import { getVendors } from '../services/vendor.service'
 
 const PIE_COLORS = ['#2563EB', '#16A34A', '#D97706', '#DC2626', '#A1A1AA']
 
@@ -43,7 +22,7 @@ const CustomTooltip = ({ active, payload }) => {
   if (active && payload?.length) {
     return (
       <div className="bg-surface border border-border rounded px-3 py-2 text-xs shadow-sm">
-        <p className="text-text-muted">{payload[0].name}</p>
+        <p className="text-text-muted">{payload[0].name || payload[0].payload?.category || payload[0].payload?.vendor || payload[0].payload?.month}</p>
         <p className="text-text-primary font-semibold">
           {typeof payload[0].value === 'number' && payload[0].value > 1000
             ? formatINR(payload[0].value)
@@ -56,6 +35,57 @@ const CustomTooltip = ({ active, payload }) => {
 }
 
 export default function ReportsPage() {
+  const [pos, setPOs] = useState([])
+  const [vendors, setVendors] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    Promise.all([getPurchaseOrders(), getVendors()])
+      .then(([p, v]) => {
+        setPOs(p)
+        setVendors(v)
+      })
+      .finally(() => setLoading(false))
+  }, [])
+
+  if (loading) return <div className="text-sm text-text-muted">Loading reports...</div>
+
+  // 1. Spending by Category
+  const categoryMap = { IT: 0, Furniture: 0, Construction: 0, Logistics: 0, Other: 0 }
+  pos.forEach((po) => {
+    const vendor = vendors.find((v) => v.id === po.vendorId)
+    const category = vendor?.category || 'Other'
+    categoryMap[category] = (categoryMap[category] || 0) + po.grandTotal
+  })
+  const categoriesList = ['IT', 'Furniture', 'Construction', 'Logistics', 'Other']
+  const spendingByCategory = categoriesList.map((cat) => ({
+    category: cat,
+    amount: categoryMap[cat] || 0,
+  }))
+
+  // 2. Vendor Performance
+  const vendorPerformance = vendors.map((v) => ({
+    vendor: v.name.split(' ')[0],
+    rating: v.rating || 0,
+    pos: v.totalPOs || 0,
+  }))
+
+  // 3. Monthly PO Volume
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+  const monthlyMap = {}
+  months.forEach((m) => { monthlyMap[m] = 0 })
+  pos.forEach((po) => {
+    if (po.poDate) {
+      const date = new Date(po.poDate)
+      const m = months[date.getMonth()]
+      monthlyMap[m] = (monthlyMap[m] || 0) + 1
+    }
+  })
+  const monthlyPOs = months.slice(0, 6).map((m) => ({
+    month: m,
+    count: monthlyMap[m] || 0,
+  }))
+
   return (
     <div className="flex flex-col gap-6">
       <div>
@@ -68,7 +98,7 @@ export default function ReportsPage() {
         <div className="bg-surface border border-border rounded-lg p-5">
           <h3 className="text-sm font-semibold text-text-primary mb-4">Spending by Category</h3>
           <ResponsiveContainer width="100%" height={220}>
-            <BarChart data={SPENDING_BY_CATEGORY} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
+            <BarChart data={spendingByCategory} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
               <CartesianGrid strokeDasharray="" stroke="#F4F4F5" horizontal vertical={false} />
               <XAxis dataKey="category" tick={{ fontSize: 11, fill: '#A1A1AA' }} axisLine={false} tickLine={false} />
               <YAxis tick={{ fontSize: 11, fill: '#A1A1AA' }} axisLine={false} tickLine={false} tickFormatter={(v) => `₹${v / 100000}L`} width={42} />
@@ -84,7 +114,7 @@ export default function ReportsPage() {
           <ResponsiveContainer width="100%" height={220}>
             <PieChart>
               <Pie
-                data={SPENDING_BY_CATEGORY}
+                data={spendingByCategory}
                 dataKey="amount"
                 nameKey="category"
                 cx="50%"
@@ -92,7 +122,7 @@ export default function ReportsPage() {
                 outerRadius={80}
                 innerRadius={45}
               >
-                {SPENDING_BY_CATEGORY.map((_, index) => (
+                {spendingByCategory.map((_, index) => (
                   <Cell key={index} fill={PIE_COLORS[index % PIE_COLORS.length]} />
                 ))}
               </Pie>
@@ -106,7 +136,7 @@ export default function ReportsPage() {
         <div className="bg-surface border border-border rounded-lg p-5">
           <h3 className="text-sm font-semibold text-text-primary mb-4">Vendor Performance (Rating)</h3>
           <ResponsiveContainer width="100%" height={180}>
-            <BarChart data={VENDOR_PERFORMANCE} layout="vertical" margin={{ top: 0, right: 20, left: 0, bottom: 0 }}>
+            <BarChart data={vendorPerformance} layout="vertical" margin={{ top: 0, right: 20, left: 0, bottom: 0 }}>
               <CartesianGrid strokeDasharray="" stroke="#F4F4F5" horizontal={false} />
               <XAxis type="number" domain={[0, 5]} tick={{ fontSize: 11, fill: '#A1A1AA' }} axisLine={false} tickLine={false} />
               <YAxis dataKey="vendor" type="category" tick={{ fontSize: 11, fill: '#A1A1AA' }} axisLine={false} tickLine={false} width={72} />
@@ -116,11 +146,11 @@ export default function ReportsPage() {
           </ResponsiveContainer>
         </div>
 
-        {/* Monthly POs */}
+        {/* Monthly PO Volume */}
         <div className="bg-surface border border-border rounded-lg p-5">
           <h3 className="text-sm font-semibold text-text-primary mb-4">Monthly PO Volume</h3>
           <ResponsiveContainer width="100%" height={180}>
-            <BarChart data={MONTHLY_POS} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
+            <BarChart data={monthlyPOs} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
               <CartesianGrid strokeDasharray="" stroke="#F4F4F5" horizontal vertical={false} />
               <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#A1A1AA' }} axisLine={false} tickLine={false} />
               <YAxis tick={{ fontSize: 11, fill: '#A1A1AA' }} axisLine={false} tickLine={false} allowDecimals={false} />

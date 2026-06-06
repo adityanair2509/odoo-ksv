@@ -57,7 +57,7 @@ vendorsRouter.post(
     requireRole(...WRITE_ROLES),
     asyncHandler(async (req, res) => {
         const data = VendorCreateSchema.parse(req.body)
-        const created = await db.vendors.create(data)
+        const created = await db.vendors.create(data, req.user!.name)
         res.status(201).json(created)
     }),
 )

@@ -14,6 +14,7 @@ import type {
     RFQ,
     UserRecord,
     Vendor,
+    ActivityEntry,
 } from './types.js'
 
 // ---------- Users ----------
@@ -294,5 +295,80 @@ export const SEED_APPROVALS: Approval[] = [
         ],
         deliveryDays: 14, vendorRating: 4.5, paymentTerms: '30 days from delivery',
         createdAt: '2024-06-10T09:00:00Z',
+    },
+]
+
+export const SEED_ACTIVITIES: ActivityEntry[] = [
+    {
+        id: 'act1',
+        type: 'po_created',
+        icon: 'file-plus',
+        title: 'Purchase Order Created',
+        description: 'PO-2024-0044 raised for TechSoft Solutions LLP — ₹12,00,000',
+        user: 'Sunita Mehta',
+        timestamp: '2024-07-01T14:30:00Z',
+    },
+    {
+        id: 'act2',
+        type: 'approval_approved',
+        icon: 'check-circle',
+        title: 'Approval Granted',
+        description: 'L2 approval for Office Furniture RFQ approved by Rohit Agarwal',
+        user: 'Rohit Agarwal',
+        timestamp: '2024-06-30T11:15:00Z',
+    },
+    {
+        id: 'act3',
+        type: 'rfq_sent',
+        icon: 'send',
+        title: 'RFQ Sent to Vendors',
+        description: 'Annual Courier & Logistics Services RFQ sent to 1 vendor',
+        user: 'Admin',
+        timestamp: '2024-06-29T09:45:00Z',
+    },
+    {
+        id: 'act4',
+        type: 'quotation_received',
+        icon: 'inbox',
+        title: 'Quotation Received',
+        description: 'QuickMove Logistics submitted quotation for Office Furniture RFQ',
+        user: 'QuickMove Logistics',
+        timestamp: '2024-06-28T16:00:00Z',
+    },
+    {
+        id: 'act5',
+        type: 'vendor_added',
+        icon: 'user-plus',
+        title: 'New Vendor Registered',
+        description: 'DataNet Systems added to vendor directory',
+        user: 'Admin',
+        timestamp: '2024-06-27T10:30:00Z',
+    },
+    {
+        id: 'act6',
+        type: 'invoice_paid',
+        icon: 'check-square',
+        title: 'Invoice Marked as Paid',
+        description: 'PO-2024-0042 invoice paid — ₹4,83,800 to Infra Supplies Pvt Ltd',
+        user: 'Rohit Agarwal',
+        timestamp: '2024-06-26T15:00:00Z',
+    },
+    {
+        id: 'act7',
+        type: 'approval_rejected',
+        icon: 'x-circle',
+        title: 'Approval Rejected',
+        description: 'DataNet Systems blocked due to compliance issues',
+        user: 'Sunita Mehta',
+        timestamp: '2024-06-25T12:00:00Z',
+    },
+    {
+        id: 'act8',
+        type: 'rfq_created',
+        icon: 'file-text',
+        title: 'RFQ Created',
+        description: 'Network Infrastructure Upgrade RFQ drafted by Procurement Manager',
+        user: 'Admin',
+        timestamp: '2024-06-24T09:00:00Z',
     },
 ]

@@ -4,10 +4,12 @@ import Badge from '../../components/ui/Badge'
 import Button from '../../components/ui/Button'
 import { getRFQById } from '../../services/rfq.service'
 import { formatDate } from '../../utils/formatDate'
+import { useRole } from '../../hooks/useRole'
 
 export default function RFQDetailPage() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const { isVendor, isProcurementOfficer } = useRole()
   const [rfq, setRFQ] = useState(null)
   const [loading, setLoading] = useState(true)
 
@@ -39,11 +41,24 @@ export default function RFQDetailPage() {
             </span>
           </div>
         </div>
-        {rfq.quotationsReceived > 0 && (
-          <Button variant="primary" size="sm" onClick={() => navigate(`/rfqs/${id}/compare`)}>
-            Compare Quotations ({rfq.quotationsReceived})
-          </Button>
-        )}
+        <div className="flex items-center gap-3">
+          {/* Vendor: submit a new quotation for this RFQ */}
+          {isVendor && (rfq.status === 'sent' || rfq.status === 'pending') && (
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={() => navigate(`/quotations/${id}/submit`)}
+            >
+              Submit Quotation
+            </Button>
+          )}
+          {/* Procurement Officer: compare received quotations */}
+          {isProcurementOfficer && rfq.quotationsReceived > 0 && (
+            <Button variant="primary" size="sm" onClick={() => navigate(`/rfqs/${id}/compare`)}>
+              Compare Quotations ({rfq.quotationsReceived})
+            </Button>
+          )}
+        </div>
       </div>
 
       <div className="grid grid-cols-2 gap-4">
@@ -84,3 +99,4 @@ function Row({ label, value }) {
     </div>
   )
 }
+

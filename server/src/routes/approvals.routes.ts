@@ -9,7 +9,7 @@ export const approvalsRouter = Router()
 const DECIDE_ROLES = ['manager', 'admin'] as const
 
 const RemarksSchema = z.object({
-    remarks: z.string().min(1, 'Remarks are required'),
+    remarks: z.string().optional().default(''),
 })
 
 /** GET /api/approvals */
@@ -38,8 +38,9 @@ approvalsRouter.post(
     requireAuth,
     requireRole(...DECIDE_ROLES),
     asyncHandler(async (req, res) => {
-        const { remarks } = RemarksSchema.parse(req.body)
-        const updated = await db.approvals.decide(req.params.id, 'approve', remarks)
+        const parsed = RemarksSchema.parse(req.body)
+        const remarks = parsed.remarks.trim() || 'Approved'
+        const updated = await db.approvals.decide(req.params.id, 'approve', remarks, req.user!.name)
         if (!updated) throw AppError.notFound('Approval not found')
         res.json({ success: true, id: req.params.id, action: 'approved', remarks })
     }),
@@ -51,8 +52,9 @@ approvalsRouter.post(
     requireAuth,
     requireRole(...DECIDE_ROLES),
     asyncHandler(async (req, res) => {
-        const { remarks } = RemarksSchema.parse(req.body)
-        const updated = await db.approvals.decide(req.params.id, 'reject', remarks)
+        const parsed = RemarksSchema.parse(req.body)
+        const remarks = parsed.remarks.trim() || 'Rejected'
+        const updated = await db.approvals.decide(req.params.id, 'reject', remarks, req.user!.name)
         if (!updated) throw AppError.notFound('Approval not found')
         res.json({ success: true, id: req.params.id, action: 'rejected', remarks })
     }),

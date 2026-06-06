@@ -1,7 +1,8 @@
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { mockQuotations } from '../../mock/mockQuotations'
 import DataTable from '../../components/ui/DataTable'
 import Badge from '../../components/ui/Badge'
+import { getQuotations } from '../../services/quotation.service'
 import { formatINR } from '../../utils/formatCurrency'
 import { formatDate } from '../../utils/formatDate'
 
@@ -49,6 +50,15 @@ const COLUMNS = (navigate) => [
 
 export default function QuotationsPage() {
   const navigate = useNavigate()
+  const [quotations, setQuotations] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    getQuotations()
+      .then(setQuotations)
+      .finally(() => setLoading(false))
+  }, [])
+
   return (
     <div className="flex flex-col gap-6">
       <div>
@@ -56,7 +66,7 @@ export default function QuotationsPage() {
         <p className="text-sm text-text-muted mt-0.5">All received vendor quotations</p>
       </div>
       <div className="bg-surface border border-border rounded-lg">
-        <DataTable columns={COLUMNS(navigate)} data={mockQuotations} />
+        <DataTable columns={COLUMNS(navigate)} data={quotations} loading={loading} />
       </div>
     </div>
   )

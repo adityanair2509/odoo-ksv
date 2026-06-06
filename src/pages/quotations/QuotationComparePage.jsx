@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom'
 import { Sparkles } from 'lucide-react'
 import Button from '../../components/ui/Button'
 import Badge from '../../components/ui/Badge'
-import { getQuotationsByRFQ } from '../../services/quotation.service'
+import { getQuotationsByRFQ, selectQuotation } from '../../services/quotation.service'
 import { getRFQById } from '../../services/rfq.service'
 import { formatINR } from '../../utils/formatCurrency'
 
@@ -32,9 +32,14 @@ export default function QuotationComparePage() {
 
   const handleSelect = async (quotation) => {
     setSelecting(quotation.id)
-    await new Promise((r) => setTimeout(r, 600))
-    navigate(`/approvals`)
-    setSelecting(null)
+    try {
+      await selectQuotation(quotation.id)
+      navigate(`/approvals`)
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setSelecting(null)
+    }
   }
 
   const ROWS = [

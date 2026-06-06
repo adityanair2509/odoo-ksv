@@ -29,6 +29,20 @@ const QuotationCreateSchema = z.object({
     notes: z.string().default(''),
 })
 
+/** GET /api/quotations */
+quotationsRouter.get(
+    '/',
+    requireAuth,
+    asyncHandler(async (req, res) => {
+        const all = await db.quotations.findAll()
+        if (req.user!.role === 'vendor') {
+            res.json(all.filter((q) => q.vendorId === req.user!.id))
+        } else {
+            res.json(all)
+        }
+    }),
+)
+
 /** GET /api/rfqs/:rfqId/quotations (nested under rfqs logically) */
 quotationsRouter.get(
     '/rfqs/:rfqId/quotations',

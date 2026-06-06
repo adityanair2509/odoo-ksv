@@ -25,7 +25,7 @@ import { getVendors } from '../services/vendor.service'
 import { formatINR } from '../utils/formatCurrency'
 import { formatDate } from '../utils/formatDate'
 import { mockActivity } from '../mock/mockActivity'
-import { mockQuotations } from '../mock/mockQuotations'
+import { getQuotations } from '../services/quotation.service'
 
 /* ─── Shared ──────────────────────────────────────────────────────────────── */
 
@@ -551,11 +551,11 @@ function ManagerDashboard({ pos, approvals, rfqs, loading }) {
    Responsibilities: View assigned RFQs, submit quotations, track POs/invoices
    Cannot: See other vendors' data, access org-level info
    ════════════════════════════════════════════════════════════════════════════ */
-function VendorDashboard({ pos, loading }) {
+function VendorDashboard({ pos, quotations, loading }) {
   const navigate = useNavigate()
   const { user } = useAuth()
 
-  const myQuotations  = mockQuotations
+  const myQuotations  = quotations
   const deliveredPOs  = pos.filter((p) => p.status === 'delivered')
   const pendingPOs    = pos.filter((p) => p.status === 'pending')
   const totalBilled   = pos.reduce((s, p) => s + p.grandTotal, 0)
@@ -693,6 +693,7 @@ export default function DashboardPage() {
   const [approvals, setApprovals] = useState([])
   const [rfqs,      setRFQs]      = useState([])
   const [vendors,   setVendors]   = useState([])
+  const [quotations,setQuotations] = useState([])
   const [loading,   setLoading]   = useState(true)
 
   useEffect(() => {
@@ -703,11 +704,13 @@ export default function DashboardPage() {
           getApprovals(),
           getRFQs(),
           getVendors(),
+          getQuotations(),
         ])
         if (results[0].status === 'fulfilled') setPOs(results[0].value)
         if (results[1].status === 'fulfilled') setApprovals(results[1].value)
         if (results[2].status === 'fulfilled') setRFQs(results[2].value)
         if (results[3].status === 'fulfilled') setVendors(results[3].value)
+        if (results[4].status === 'fulfilled') setQuotations(results[4].value)
       } finally {
         setLoading(false)
       }
@@ -715,7 +718,7 @@ export default function DashboardPage() {
     load()
   }, [])
 
-  const props = { pos, approvals, rfqs, vendors, loading }
+  const props = { pos, approvals, rfqs, vendors, quotations, loading }
 
   if (role === 'admin')               return <AdminDashboard {...props} />
   if (role === 'procurement_officer') return <ProcurementOfficerDashboard {...props} />

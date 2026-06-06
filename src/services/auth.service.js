@@ -15,7 +15,7 @@ const MOCK_USERS = [
   {
     id: 'u2',
     name: 'Priya Mehta',
-    email: 'procurement@vendorbridge.in',
+    email: 'priya@vendorbridge.in',
     role: 'procurement_officer',
     password: 'demo123',
     avatar: 'P',
@@ -23,18 +23,18 @@ const MOCK_USERS = [
   {
     id: 'u3',
     name: 'Rohit Agarwal',
-    email: 'manager@vendorbridge.in',
+    email: 'rohit@vendorbridge.in',
     role: 'manager',
     password: 'demo123',
     avatar: 'R',
   },
   {
-    id: 'u4',
-    name: 'Vendor Partner',
-    email: 'vendor@vendorbridge.in',
+    id: 'v1',
+    name: 'Rajesh Kumar',
+    email: 'rajesh@infrasupplies.in',
     role: 'vendor',
     password: 'demo123',
-    avatar: 'V',
+    avatar: 'R',
   },
 ]
 
@@ -71,5 +71,21 @@ export const authGetProfile = async () => {
     return safeUser
   }
   const { data } = await api.get('/auth/me')
+  return data
+}
+
+/**
+ * Create a new user (Admin only).
+ * @param {object} userData
+ * @returns {Promise<object>}
+ */
+export const createUser = async (userData) => {
+  if (USE_MOCK) {
+    await new Promise((r) => setTimeout(r, 400))
+    const next = { ...userData, id: `u${Date.now()}`, avatar: userData.name.charAt(0).toUpperCase() }
+    MOCK_USERS.push(next)
+    return next
+  }
+  const { data } = await api.post('/auth/create-user', userData)
   return data
 }

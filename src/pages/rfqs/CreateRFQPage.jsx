@@ -77,7 +77,7 @@ export default function CreateRFQPage() {
       setSubmitError(
         `Your account is signed in as "${roleLabel}" (${user?.email || 'no email'}). ` +
         `Only Procurement Officers and Administrators can create RFQs. ` +
-        `Please sign out and log back in with procurement@vendorbridge.in.`
+        `Please sign out and log back in with priya@vendorbridge.in.`
       )
       return
     }
@@ -118,7 +118,7 @@ export default function CreateRFQPage() {
         setSubmitError(
           `Access denied (403). Your current role is "${roleLabel}". ` +
           `Only Procurement Officers and Administrators can create RFQs. ` +
-          `Sign out and log in with procurement@vendorbridge.in / demo123.`
+          `Sign out and log in with priya@vendorbridge.in / demo123.`
         )
       } else if (status === 401) {
         setSubmitError('Your session has expired. Please sign in again.')

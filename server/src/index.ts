@@ -91,11 +91,11 @@ async function main() {
         // eslint-disable-next-line no-console
         console.log(`     admin@vendorbridge.in          (admin)`)
         // eslint-disable-next-line no-console
-        console.log(`     procurement@vendorbridge.in    (procurement_officer)`)
+        console.log(`     priya@vendorbridge.in          (procurement_officer)`)
         // eslint-disable-next-line no-console
-        console.log(`     manager@vendorbridge.in        (manager)`)
+        console.log(`     rohit@vendorbridge.in          (manager)`)
         // eslint-disable-next-line no-console
-        console.log(`     vendor@vendorbridge.in         (vendor)\n`)
+        console.log(`     rajesh@infrasupplies.in        (vendor)\n`)
     })
 }
 

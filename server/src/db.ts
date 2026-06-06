@@ -22,6 +22,7 @@ import type {
     UserRecord,
     Vendor,
     ActivityEntry,
+    Role,
 } from './types.js'
 import {
     SEED_USERS,
@@ -99,6 +100,20 @@ export const db = {
             const u = users.find((x) => x.id === id)
             return u ? toPublic(u) : null
         },
+        async create(data: { name: string; email: string; role: Role; password?: string; id?: string }): Promise<User> {
+            const password = data.password || 'demo123'
+            const passwordHash = await hash(password)
+            const next: UserRecord = {
+                id: data.id || `u${Date.now()}`,
+                name: data.name,
+                email: data.email,
+                role: data.role,
+                avatar: data.name.charAt(0).toUpperCase(),
+                passwordHash,
+            }
+            users.push(next)
+            return toPublic(next)
+        },
     },
 
     vendors: {
@@ -115,6 +130,18 @@ export const db = {
                 createdAt: new Date().toISOString(),
             }
             vendors.push(next)
+
+            // Auto-create a user account for the vendor so they can log in!
+            const exists = await db.users.findByEmail(data.email)
+            if (!exists) {
+                await db.users.create({
+                    id: next.id,
+                    name: data.contactPerson || data.name,
+                    email: data.email,
+                    role: 'vendor',
+                })
+            }
+
             await db.activities.log('vendor_added', 'user-plus', 'New Vendor Registered', `${next.name} added to vendor directory`, userName)
             return next
         },

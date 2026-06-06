@@ -1,13 +1,19 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
-import { CheckCircle, XCircle, Loader2 } from 'lucide-react'
 import Input from '../../components/ui/Input'
 import Button from '../../components/ui/Button'
-import { createVendor, verifyGSTIN } from '../../services/vendor.service'
-import { validateGSTINFormat, getStateFromGSTIN } from '../../utils/gstin.validator'
+import { createVendor } from '../../services/vendor.service'
+import { createUser } from '../../services/auth.service'
 
 const CATEGORIES = ['IT', 'Logistics', 'Furniture', 'Construction', 'Other']
+
+const ROLES = [
+  { value: 'vendor', label: 'Vendor' },
+  { value: 'procurement_officer', label: 'Procurement Officer' },
+  { value: 'manager', label: 'Manager' },
+  { value: 'admin', label: 'Admin' },
+]
 
 export default function AddVendorPage() {
   const navigate = useNavigate()
@@ -16,13 +22,24 @@ export default function AddVendorPage() {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm()
+
+  const selectedRole = watch('role', 'vendor')
 
   const onSubmit = async (data) => {
     setSubmitting(true)
     try {
-      await createVendor({ ...data, gstinVerified: true, status: 'active' })
+      if (data.role === 'vendor') {
+        await createVendor({ ...data, gstinVerified: true, status: 'active' })
+      } else {
+        await createUser({
+          name: data.name,
+          email: data.email,
+          role: data.role,
+        })
+      }
       navigate('/vendors')
     } finally {
       setSubmitting(false)
@@ -34,66 +51,88 @@ export default function AddVendorPage() {
       <Link to="/vendors" className="text-sm text-text-muted hover:text-text-secondary transition-colors w-fit">
         ← Vendors
       </Link>
-      <h2 className="text-lg font-semibold text-text-primary">Register New Vendor</h2>
+      <h2 className="text-lg font-semibold text-text-primary">Onboard User or Vendor</h2>
 
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6 max-w-2xl">
-        {/* Company Information */}
-        <Section title="Company Information">
-          <Input
-            label="Company Name"
-            name="name"
-            placeholder="Acme Supplies Pvt Ltd"
-            register={register('name', { required: 'Company name is required' })}
-            error={errors.name?.message}
-          />
+        {/* Role Selection */}
+        <Section title="Onboarding Role">
           <div className="flex flex-col gap-1.5">
             <label className="text-xs uppercase tracking-wide text-text-muted font-medium">
-              Category
+              Select Role to Register
             </label>
             <select
-              {...register('category', { required: 'Category is required' })}
+              {...register('role', { required: 'Role is required' })}
               className="w-full h-9 px-3 border border-border rounded-md text-sm text-text-primary bg-white focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-colors"
             >
-              <option value="">Select category</option>
-              {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
+              {ROLES.map((r) => <option key={r.value} value={r.value}>{r.label}</option>)}
             </select>
-            {errors.category && <p className="text-xs text-danger">{errors.category.message}</p>}
+            {errors.role && <p className="text-xs text-danger">{errors.role.message}</p>}
           </div>
         </Section>
 
-        {/* GST Details */}
-        <Section title="GST Details">
+        {/* Profile Information */}
+        <Section title="Profile Information">
           <Input
-            label="GSTIN"
-            name="gstin"
-            placeholder="27AACCI1234A1Z5"
-            register={register('gstin', { required: 'GSTIN is required' })}
-            error={errors.gstin?.message}
+            label={selectedRole === 'vendor' ? "Company Name" : "Full Name"}
+            name="name"
+            placeholder={selectedRole === 'vendor' ? "Acme Supplies Pvt Ltd" : "John Doe"}
+            register={register('name', { required: 'Name is required' })}
+            error={errors.name?.message}
           />
-          <Input
-            label="State"
-            name="state"
-            placeholder="e.g. Maharashtra"
-            register={register('state', { required: 'State is required' })}
-            error={errors.state?.message}
-          />
+          {selectedRole === 'vendor' && (
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs uppercase tracking-wide text-text-muted font-medium">
+                Category
+              </label>
+              <select
+                {...register('category', { required: 'Category is required' })}
+                className="w-full h-9 px-3 border border-border rounded-md text-sm text-text-primary bg-white focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-colors"
+              >
+                <option value="">Select category</option>
+                {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
+              </select>
+              {errors.category && <p className="text-xs text-danger">{errors.category.message}</p>}
+            </div>
+          )}
         </Section>
+
+        {/* GST Details */}
+        {selectedRole === 'vendor' && (
+          <Section title="GST Details">
+            <Input
+              label="GSTIN"
+              name="gstin"
+              placeholder="27AACCI1234A1Z5"
+              register={register('gstin', { required: 'GSTIN is required' })}
+              error={errors.gstin?.message}
+            />
+            <Input
+              label="State"
+              name="state"
+              placeholder="e.g. Maharashtra"
+              register={register('state', { required: 'State is required' })}
+              error={errors.state?.message}
+            />
+          </Section>
+        )}
 
         {/* Contact Details */}
         <Section title="Contact Details">
-          <Input
-            label="Contact Person Name"
-            name="contactPerson"
-            placeholder="Rajesh Kumar"
-            register={register('contactPerson', { required: 'Contact person is required' })}
-            error={errors.contactPerson?.message}
-          />
+          {selectedRole === 'vendor' && (
+            <Input
+              label="Contact Person Name"
+              name="contactPerson"
+              placeholder="Rajesh Kumar"
+              register={register('contactPerson', { required: 'Contact person is required' })}
+              error={errors.contactPerson?.message}
+            />
+          )}
           <div className="grid grid-cols-2 gap-4">
             <Input
               label="Email Address"
               name="email"
               type="email"
-              placeholder="contact@company.in"
+              placeholder={selectedRole === 'vendor' ? "contact@company.in" : "john@company.in"}
               register={register('email', {
                 required: 'Email is required',
                 pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'Invalid email' },
@@ -115,7 +154,7 @@ export default function AddVendorPage() {
             </label>
             <textarea
               {...register('address', { required: 'Address is required' })}
-              placeholder="14, MIDC Industrial Area, Pune, Maharashtra 411019"
+              placeholder={selectedRole === 'vendor' ? "14, MIDC Industrial Area, Pune, Maharashtra 411019" : "Office Location / Department"}
               rows={3}
               className="w-full px-3 py-2 border border-border rounded-md text-sm text-text-primary bg-white focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary resize-none"
             />
@@ -137,7 +176,7 @@ export default function AddVendorPage() {
             variant="primary"
             loading={submitting}
           >
-            Register Vendor
+            Register Profile
           </Button>
         </div>
       </form>

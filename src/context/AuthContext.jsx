@@ -29,9 +29,10 @@ export function AuthProvider({ children }) {
     if (stored.startsWith('mock-jwt-token-')) {
       const mockUsers = {
         'mock-jwt-token-u1': { id: 'u1', name: 'Admin User', email: 'admin@vendorbridge.in', role: 'admin' },
-        'mock-jwt-token-u2': { id: 'u2', name: 'Priya Mehta', email: 'procurement@vendorbridge.in', role: 'procurement_officer' },
-        'mock-jwt-token-u3': { id: 'u3', name: 'Rohit Agarwal', email: 'manager@vendorbridge.in', role: 'manager' },
-        'mock-jwt-token-u4': { id: 'u4', name: 'Vendor Partner', email: 'vendor@vendorbridge.in', role: 'vendor' },
+        'mock-jwt-token-u2': { id: 'u2', name: 'Priya Mehta', email: 'priya@vendorbridge.in', role: 'procurement_officer' },
+        'mock-jwt-token-u3': { id: 'u3', name: 'Rohit Agarwal', email: 'rohit@vendorbridge.in', role: 'manager' },
+        'mock-jwt-token-v1': { id: 'v1', name: 'Rajesh Kumar', email: 'rajesh@infrasupplies.in', role: 'vendor' },
+        'mock-jwt-token-u4': { id: 'v1', name: 'Rajesh Kumar', email: 'rajesh@infrasupplies.in', role: 'vendor' },
       }
       const rehydrated = mockUsers[stored]
       if (rehydrated) {

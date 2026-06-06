@@ -23,9 +23,14 @@ type SeedUser = Omit<UserRecord, 'passwordHash'> & { password: string }
 
 export const SEED_USERS: SeedUser[] = [
     { id: 'u1', name: 'Admin User', email: 'admin@vendorbridge.in', role: 'admin', avatar: 'A', password: 'demo123' },
-    { id: 'u2', name: 'Priya Mehta', email: 'procurement@vendorbridge.in', role: 'procurement_officer', avatar: 'P', password: 'demo123' },
-    { id: 'u3', name: 'Rohit Agarwal', email: 'manager@vendorbridge.in', role: 'manager', avatar: 'R', password: 'demo123' },
-    { id: 'u4', name: 'Vendor Partner', email: 'vendor@vendorbridge.in', role: 'vendor', avatar: 'V', password: 'demo123' },
+    { id: 'u2', name: 'Priya Mehta', email: 'priya@vendorbridge.in', role: 'procurement_officer', avatar: 'P', password: 'demo123' },
+    { id: 'm1', name: 'Sunita Mehta', email: 'sunita@vendorbridge.in', role: 'manager', avatar: 'S', password: 'demo123' },
+    { id: 'u3', name: 'Rohit Agarwal', email: 'rohit@vendorbridge.in', role: 'manager', avatar: 'R', password: 'demo123' },
+    { id: 'v1', name: 'Rajesh Kumar', email: 'rajesh@infrasupplies.in', role: 'vendor', avatar: 'R', password: 'demo123' },
+    { id: 'v2', name: 'Priya Sharma', email: 'priya@techsoft.in', role: 'vendor', avatar: 'P', password: 'demo123' },
+    { id: 'v3', name: 'Amit Singh', email: 'amit@quickmove.in', role: 'vendor', avatar: 'A', password: 'demo123' },
+    { id: 'v4', name: 'Meena Rajan', email: 'meena@furnishpro.in', role: 'vendor', avatar: 'M', password: 'demo123' },
+    { id: 'v5', name: 'Vikram Patel', email: 'vikram@datanetsys.in', role: 'vendor', avatar: 'V', password: 'demo123' },
 ]
 
 // ---------- Vendors ----------

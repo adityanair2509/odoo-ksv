@@ -1,0 +1,728 @@
+{
+  "users": [
+    {
+      "id": "admin1",
+      "name": "Admin",
+      "email": "shreenathpillai1696@gmail.com",
+      "role": "admin",
+      "avatar": "S",
+      "status": "active",
+      "passwordHash": "$2a$10$hJUq5xvc/QI1WY8vKPNxs.eCpNfCnF9QDO3otCAH1g3LVFEoJrRtK"
+    },
+    {
+      "id": "u1780739961754",
+      "name": "tanay  sagar",
+      "email": "tanaysagar123@gmail.com",
+      "role": "vendor",
+      "avatar": "T",
+      "passwordHash": "$2a$10$oyG3RK880QHixrDcoyLU.uvTNa0lNiPem9bdpXMoWk0Zn4PhI5KUu",
+      "status": "active",
+      "phone": "9574055540",
+      "country": "India",
+      "additionalInfo": "pani"
+    },
+    {
+      "id": "u1780740133743",
+      "name": "Aditya Nair",
+      "email": "adityanairathome@gmail.com",
+      "role": "procurement_officer",
+      "avatar": "A",
+      "passwordHash": "$2a$10$k.bb0xjtEfqxDiYJAfI89.L8THbz3ft.X6I8MegbWuofnyz5VCxAi",
+      "status": "active",
+      "phone": "9825376002",
+      "country": "UAE",
+      "additionalInfo": "oil habibi"
+    },
+    {
+      "id": "u1780740931967",
+      "name": "Nilesh Shah",
+      "email": "animeamv305@gmail.com",
+      "role": "vendor",
+      "avatar": "N",
+      "passwordHash": "$2a$10$C2Jde4MBsoFiGVhpKnAM4uL6Sd49CA.ryKMFon2krHm8PxtQX7U5u",
+      "status": "active",
+      "phone": "234234234",
+      "country": "United States",
+      "additionalInfo": "dqwdeqaxa"
+    },
+    {
+      "id": "u1780741519533",
+      "name": "Abhishek",
+      "email": "tanaysagar037@gmail.com",
+      "role": "manager",
+      "avatar": "A",
+      "passwordHash": "$2a$10$oL80yrXKHem2LGitk2roSe6IwuxPth5JyDiZ5a3DeStAiX2oJnmWe",
+      "status": "active"
+    }
+  ],
+  "vendors": [
+    {
+      "id": "u1780739961754",
+      "name": "pani",
+      "category": "Other",
+      "gstin": "29AABCT5432B1Z3",
+      "contactPerson": "tanay  sagar",
+      "email": "tanaysagar123@gmail.com",
+      "phone": "9574055540",
+      "address": "India",
+      "state": "Maharashtra",
+      "status": "active",
+      "rating": 0,
+      "totalPOs": 1,
+      "totalSpend": 271464.64,
+      "gstinVerified": false,
+      "createdAt": "2026-06-06T10:09:45.222Z",
+      "country": "India",
+      "additionalInfo": "pani"
+    },
+    {
+      "id": "u1780740931967",
+      "name": "dqwdeqaxa",
+      "category": "Other",
+      "gstin": "29AABCT5432B1Z3",
+      "contactPerson": "Nilesh Shah",
+      "email": "animeamv305@gmail.com",
+      "phone": "234234234",
+      "address": "United States",
+      "state": "United States",
+      "status": "active",
+      "rating": 4,
+      "totalPOs": 1,
+      "totalSpend": 566.58,
+      "gstinVerified": false,
+      "createdAt": "2026-06-06T10:15:31.967Z",
+      "country": "United States",
+      "additionalInfo": "dqwdeqaxa"
+    }
+  ],
+  "rfqs": [
+    {
+      "title": "qdgwadjh",
+      "category": "IT",
+      "status": "approved",
+      "priority": "Medium",
+      "deadline": "1111-11-11",
+      "description": "wqedqwdqw",
+      "assignedVendors": [
+        "u1780739961754"
+      ],
+      "lineItems": [
+        {
+          "name": "wqdqd",
+          "quantity": 2,
+          "unit": "Ltr"
+        }
+      ],
+      "createdBy": "u1780740133743",
+      "id": "rfq1780740719296",
+      "quotationsReceived": 3,
+      "createdAt": "2026-06-06T10:11:59.296Z"
+    },
+    {
+      "title": "dgsjdhad",
+      "category": "Other",
+      "status": "sent",
+      "priority": "Low",
+      "deadline": "1111-11-11",
+      "description": "qweqwdwq",
+      "assignedVendors": [
+        "u1780740931967",
+        "u1780739961754"
+      ],
+      "lineItems": [
+        {
+          "name": "adwqadqw",
+          "quantity": 11,
+          "unit": "Ltr"
+        }
+      ],
+      "createdBy": "u1780740133743",
+      "id": "rfq1780741377456",
+      "quotationsReceived": 0,
+      "createdAt": "2026-06-06T10:22:57.456Z"
+    }
+  ],
+  "quotations": [
+    {
+      "rfqId": "rfq1780740719296",
+      "vendorId": "u1780739961754",
+      "vendorName": "tanay  sagar",
+      "grandTotal": 271464.64,
+      "gstPercent": 22,
+      "deliveryDays": 2,
+      "vendorRating": 0,
+      "paymentTerms": "23evwqd",
+      "lineItems": [
+        {
+          "name": "wqdqd",
+          "quantity": 2,
+          "unitPrice": 111256,
+          "total": 222512
+        }
+      ],
+      "notes": "fcwdqwdeeq",
+      "id": "q1780740768218",
+      "status": "rejected",
+      "submittedAt": "2026-06-06T10:12:48.218Z"
+    },
+    {
+      "rfqId": "rfq1780740719296",
+      "vendorId": "u1780739961754",
+      "vendorName": "tanay  sagar",
+      "grandTotal": 26.84,
+      "gstPercent": 22,
+      "deliveryDays": 22,
+      "vendorRating": 0,
+      "paymentTerms": "wqddaasd",
+      "lineItems": [
+        {
+          "name": "wqdqd",
+          "quantity": 2,
+          "unitPrice": 11,
+          "total": 22
+        }
+      ],
+      "notes": "deqweq2",
+      "id": "q1780741410259",
+      "status": "rejected",
+      "submittedAt": "2026-06-06T10:23:30.259Z"
+    },
+    {
+      "rfqId": "rfq1780740719296",
+      "vendorId": "u1780740931967",
+      "vendorName": "Nilesh Shah",
+      "grandTotal": 566.58,
+      "gstPercent": 33,
+      "deliveryDays": 21321,
+      "vendorRating": 4,
+      "paymentTerms": "we2q1",
+      "lineItems": [
+        {
+          "name": "wqdqd",
+          "quantity": 2,
+          "unitPrice": 213,
+          "total": 426
+        }
+      ],
+      "notes": "sdwdeqw",
+      "id": "q1780741443261",
+      "status": "selected",
+      "submittedAt": "2026-06-06T10:24:03.261Z"
+    }
+  ],
+  "purchaseOrders": [
+    {
+      "id": "po1780741556401",
+      "poNumber": "PO-2026-6194",
+      "rfqId": "rfq1780740719296",
+      "rfqTitle": "qdgwadjh",
+      "vendorId": "u1780739961754",
+      "vendorName": "tanay  sagar",
+      "vendorAddress": "India",
+      "vendorGSTIN": "29AABCT5432B1Z3",
+      "status": "pending",
+      "amount": 222512,
+      "cgstPercent": 11,
+      "sgstPercent": 11,
+      "subtotal": 222512,
+      "cgst": 24476.32,
+      "sgst": 24476.32,
+      "grandTotal": 271464.64,
+      "poDate": "2026-06-06T10:25:56.401Z",
+      "invoiceDate": "2026-06-06T10:25:56.401Z",
+      "dueDate": "2026-07-06T10:25:56.401Z",
+      "deliveryDate": null,
+      "lineItems": [
+        {
+          "name": "wqdqd",
+          "quantity": 2,
+          "unitPrice": 111256,
+          "total": 222512
+        }
+      ],
+      "orgName": "KSV Enterprises Pvt Ltd",
+      "orgAddress": "Plot 7, Nariman Point, Mumbai, Maharashtra 400021",
+      "orgGSTIN": "27AABCK1234F1Z1",
+      "createdAt": "2026-06-06T10:25:56.401Z"
+    },
+    {
+      "id": "po1780742174493",
+      "poNumber": "PO-2026-6986",
+      "rfqId": "rfq1780740719296",
+      "rfqTitle": "qdgwadjh",
+      "vendorId": "u1780740931967",
+      "vendorName": "Nilesh Shah",
+      "vendorAddress": "United States",
+      "vendorGSTIN": "29AABCT5432B1Z3",
+      "status": "pending",
+      "amount": 426,
+      "cgstPercent": 16.5,
+      "sgstPercent": 16.5,
+      "subtotal": 426,
+      "cgst": 70.29,
+      "sgst": 70.29,
+      "grandTotal": 566.58,
+      "poDate": "2026-06-06T10:36:14.493Z",
+      "invoiceDate": "2026-06-06T10:36:14.493Z",
+      "dueDate": "2026-07-06T10:36:14.493Z",
+      "deliveryDate": null,
+      "lineItems": [
+        {
+          "name": "wqdqd",
+          "quantity": 2,
+          "unitPrice": 213,
+          "total": 426
+        }
+      ],
+      "orgName": "KSV Enterprises Pvt Ltd",
+      "orgAddress": "Plot 7, Nariman Point, Mumbai, Maharashtra 400021",
+      "orgGSTIN": "27AABCK1234F1Z1",
+      "createdAt": "2026-06-06T10:36:14.493Z"
+    }
+  ],
+  "invoices": [
+    {
+      "id": "inv1780741556401",
+      "invoiceNumber": "INV-2026-834192",
+      "poId": "po1780741556401",
+      "vendorId": "u1780739961754",
+      "amount": 222512,
+      "gstAmount": 48952.64,
+      "totalAmount": 271464.64,
+      "status": "pending",
+      "issuedAt": "2026-06-06T10:25:56.401Z",
+      "dueAt": "2026-07-06T10:25:56.401Z",
+      "paidAt": null
+    },
+    {
+      "id": "inv1780742174493",
+      "invoiceNumber": "INV-2026-750695",
+      "poId": "po1780742174493",
+      "vendorId": "u1780740931967",
+      "amount": 426,
+      "gstAmount": 140.58,
+      "totalAmount": 566.58,
+      "status": "pending",
+      "issuedAt": "2026-06-06T10:36:14.493Z",
+      "dueAt": "2026-07-06T10:36:14.493Z",
+      "paidAt": null
+    }
+  ],
+  "approvals": [
+    {
+      "id": "ap1780740812830",
+      "rfqId": "rfq1780740719296",
+      "rfqTitle": "qdgwadjh",
+      "quotationId": "q1780741443261",
+      "vendorName": "Nilesh Shah",
+      "amount": 566.58,
+      "status": "approved",
+      "currentStep": "PO Generated",
+      "steps": [
+        {
+          "label": "Submitted",
+          "status": "completed",
+          "completedAt": "2026-06-06T10:13:32.831Z"
+        },
+        {
+          "label": "L1 Review",
+          "status": "completed",
+          "completedAt": "2026-06-06T10:36:14.493Z"
+        },
+        {
+          "label": "L2 Approval",
+          "status": "completed",
+          "completedAt": "2026-06-06T10:36:14.493Z"
+        },
+        {
+          "label": "PO Generated",
+          "status": "completed",
+          "completedAt": "2026-06-06T10:36:14.493Z"
+        }
+      ],
+      "approvalChain": [
+        {
+          "id": "apr-po-1780741766618",
+          "name": "Aditya Nair",
+          "role": "Procurement Officer",
+          "status": "approved",
+          "timestamp": "2026-06-06T10:29:26.618Z",
+          "remarks": "Selected Nilesh Shah for manager approval"
+        },
+        {
+          "id": "apr-vendor-1780741766618",
+          "name": "Nilesh Shah",
+          "role": "Vendor",
+          "status": "approved",
+          "timestamp": "2026-06-06T10:24:03.261Z",
+          "remarks": "Quotation submitted"
+        }
+      ],
+      "lineItems": [
+        {
+          "name": "wqdqd",
+          "quantity": 2
+        }
+      ],
+      "deliveryDays": 21321,
+      "vendorRating": 4,
+      "paymentTerms": "we2q1",
+      "createdAt": "2026-06-06T10:13:32.831Z",
+      "remarks": "Approved",
+      "decidedAt": "2026-06-06T10:36:14.493Z",
+      "managerRating": 4
+    },
+    {
+      "id": "ap1780740824514",
+      "rfqId": "rfq1780740719296",
+      "rfqTitle": "qdgwadjh",
+      "quotationId": "q1780740768218",
+      "vendorName": "tanay  sagar",
+      "amount": 271464.64,
+      "status": "approved",
+      "currentStep": "PO Generated",
+      "steps": [
+        {
+          "label": "Submitted",
+          "status": "completed",
+          "completedAt": "2026-06-06T10:13:44.514Z"
+        },
+        {
+          "label": "L1 Review",
+          "status": "completed",
+          "completedAt": "2026-06-06T10:25:56.401Z"
+        },
+        {
+          "label": "L2 Approval",
+          "status": "completed",
+          "completedAt": "2026-06-06T10:25:56.401Z"
+        },
+        {
+          "label": "PO Generated",
+          "status": "completed",
+          "completedAt": "2026-06-06T10:25:56.401Z"
+        }
+      ],
+      "approvalChain": [
+        {
+          "id": "apr-po-1780741766618",
+          "name": "Aditya Nair",
+          "role": "Procurement Officer",
+          "status": "approved",
+          "timestamp": "2026-06-06T10:29:26.618Z",
+          "remarks": "Selected tanay  sagar for manager approval"
+        },
+        {
+          "id": "apr-vendor-1780741766618",
+          "name": "tanay  sagar",
+          "role": "Vendor",
+          "status": "approved",
+          "timestamp": "2026-06-06T10:12:48.218Z",
+          "remarks": "Quotation submitted"
+        }
+      ],
+      "lineItems": [
+        {
+          "name": "wqdqd",
+          "quantity": 2
+        }
+      ],
+      "deliveryDays": 2,
+      "vendorRating": 0,
+      "paymentTerms": "23evwqd",
+      "createdAt": "2026-06-06T10:13:44.514Z",
+      "remarks": "Approved",
+      "decidedAt": "2026-06-06T10:25:56.401Z"
+    }
+  ],
+  "activities": [
+    {
+      "id": "act1780740719296-842",
+      "type": "rfq_created",
+      "icon": "file-text",
+      "title": "RFQ Created",
+      "description": "qdgwadjh RFQ drafted by Aditya Nair",
+      "user": "Aditya Nair",
+      "timestamp": "2026-06-06T10:11:59.296Z"
+    },
+    {
+      "id": "act1780740768218-770",
+      "type": "quotation_received",
+      "icon": "inbox",
+      "title": "Quotation Received",
+      "description": "tanay  sagar submitted quotation for qdgwadjh",
+      "user": "tanay  sagar",
+      "timestamp": "2026-06-06T10:12:48.218Z"
+    },
+    {
+      "id": "act1780740931967-140",
+      "type": "vendor_added",
+      "icon": "user-plus",
+      "title": "Vendor Profile Created",
+      "description": "dqwdeqaxa added from approved registration",
+      "user": "Admin",
+      "timestamp": "2026-06-06T10:15:31.967Z"
+    },
+    {
+      "id": "act1780741377456-547",
+      "type": "rfq_created",
+      "icon": "file-text",
+      "title": "RFQ Created",
+      "description": "dgsjdhad RFQ drafted by Aditya Nair",
+      "user": "Aditya Nair",
+      "timestamp": "2026-06-06T10:22:57.456Z"
+    },
+    {
+      "id": "act1780741410259-903",
+      "type": "quotation_received",
+      "icon": "inbox",
+      "title": "Quotation Received",
+      "description": "tanay  sagar submitted quotation for qdgwadjh",
+      "user": "tanay  sagar",
+      "timestamp": "2026-06-06T10:23:30.259Z"
+    },
+    {
+      "id": "act1780741443261-118",
+      "type": "quotation_received",
+      "icon": "inbox",
+      "title": "Quotation Received",
+      "description": "Nilesh Shah submitted quotation for qdgwadjh",
+      "user": "Nilesh Shah",
+      "timestamp": "2026-06-06T10:24:03.261Z"
+    },
+    {
+      "id": "act1780741564500-753",
+      "type": "invoice_created",
+      "icon": "receipt",
+      "title": "Invoice Generated",
+      "description": "INV-2026-834192 created for PO-2026-6194 — ₹2,71,464.64",
+      "user": "Abhishek",
+      "timestamp": "2026-06-06T10:26:04.500Z"
+    },
+    {
+      "id": "act1780741564500-250",
+      "type": "po_created",
+      "icon": "file-plus",
+      "title": "Purchase Order Created",
+      "description": "PO-2026-6194 raised for tanay  sagar — ₹2,71,464.64",
+      "user": "Abhishek",
+      "timestamp": "2026-06-06T10:26:04.500Z"
+    },
+    {
+      "id": "act1780741564500-111",
+      "type": "approval_approved",
+      "icon": "check-circle",
+      "title": "Approval Granted",
+      "description": "L2 approval for qdgwadjh approved by Abhishek",
+      "user": "Abhishek",
+      "timestamp": "2026-06-06T10:26:04.500Z"
+    },
+    {
+      "id": "act1780742184003-779",
+      "type": "invoice_created",
+      "icon": "receipt",
+      "title": "Invoice Generated",
+      "description": "INV-2026-750695 created for PO-2026-6986 — ₹566.58",
+      "user": "Abhishek",
+      "timestamp": "2026-06-06T10:36:24.003Z"
+    },
+    {
+      "id": "act1780742184003-32",
+      "type": "po_created",
+      "icon": "file-plus",
+      "title": "Purchase Order Created",
+      "description": "PO-2026-6986 raised for Nilesh Shah — ₹566.58",
+      "user": "Abhishek",
+      "timestamp": "2026-06-06T10:36:24.003Z"
+    },
+    {
+      "id": "act1780742184003-893",
+      "type": "approval_approved",
+      "icon": "check-circle",
+      "title": "Approval Granted",
+      "description": "L2 approval for qdgwadjh approved by Abhishek",
+      "user": "Abhishek",
+      "timestamp": "2026-06-06T10:36:24.003Z"
+    }
+  ],
+  "notifications": [
+    {
+      "userId": "admin1",
+      "title": "New Registration Pending",
+      "message": "tanay  sagar (vendor) requested access — review in Registrations.",
+      "type": "system",
+      "entityType": "registration",
+      "entityId": "reg1780739909589",
+      "id": "n1780739922979-704",
+      "isRead": true,
+      "createdAt": "2026-06-06T09:58:42.979Z"
+    },
+    {
+      "userId": "u1780739961754",
+      "title": "Account Approved",
+      "message": "Your VendorBridge registration has been approved. You can now sign in.",
+      "type": "system",
+      "id": "n1780739961754-422",
+      "isRead": false,
+      "createdAt": "2026-06-06T09:59:21.754Z"
+    },
+    {
+      "userId": "admin1",
+      "title": "New Registration Pending",
+      "message": "Aditya Nair (procurement_officer) requested access — review in Registrations.",
+      "type": "system",
+      "entityType": "registration",
+      "entityId": "reg1780740082094",
+      "id": "n1780740106403-176",
+      "isRead": false,
+      "createdAt": "2026-06-06T10:01:46.403Z"
+    },
+    {
+      "userId": "u1780740133743",
+      "title": "Account Approved",
+      "message": "Your VendorBridge registration has been approved. You can now sign in.",
+      "type": "system",
+      "id": "n1780740133743-354",
+      "isRead": false,
+      "createdAt": "2026-06-06T10:02:13.743Z"
+    },
+    {
+      "userId": "admin1",
+      "title": "New Registration Pending",
+      "message": "Nilesh Shah (vendor) requested access — review in Registrations.",
+      "type": "system",
+      "entityType": "registration",
+      "entityId": "reg1780740883822",
+      "id": "n1780740900649-804",
+      "isRead": false,
+      "createdAt": "2026-06-06T10:15:00.649Z"
+    },
+    {
+      "userId": "u1780740931967",
+      "title": "Account Approved",
+      "message": "Your VendorBridge registration has been approved. You can now sign in.",
+      "type": "system",
+      "id": "n1780740931967-119",
+      "isRead": false,
+      "createdAt": "2026-06-06T10:15:31.967Z"
+    },
+    {
+      "userId": "admin1",
+      "title": "Invoice Generated",
+      "message": "INV-2026-834192 for tanay  sagar — ₹2,71,464.64",
+      "type": "system",
+      "entityType": "invoice",
+      "entityId": "inv1780741556401",
+      "id": "n1780741561800-841",
+      "isRead": false,
+      "createdAt": "2026-06-06T10:26:01.800Z"
+    },
+    {
+      "userId": "u1780739961754",
+      "title": "Approval Granted",
+      "message": "L2 approval for qdgwadjh approved by Abhishek",
+      "type": "approval",
+      "entityType": "approval",
+      "entityId": "ap1780740824514",
+      "id": "n1780741564500-514",
+      "isRead": false,
+      "createdAt": "2026-06-06T10:26:04.500Z"
+    },
+    {
+      "userId": "admin1",
+      "title": "Invoice Generated",
+      "message": "INV-2026-750695 for Nilesh Shah — ₹566.58",
+      "type": "system",
+      "entityType": "invoice",
+      "entityId": "inv1780742174493",
+      "id": "n1780742180986-391",
+      "isRead": false,
+      "createdAt": "2026-06-06T10:36:20.986Z"
+    },
+    {
+      "userId": "u1780740931967",
+      "title": "Approval Granted",
+      "message": "L2 approval for qdgwadjh approved by Abhishek",
+      "type": "approval",
+      "entityType": "approval",
+      "entityId": "ap1780740812830",
+      "id": "n1780742184003-347",
+      "isRead": false,
+      "createdAt": "2026-06-06T10:36:24.003Z"
+    }
+  ],
+  "registrations": [
+    {
+      "firstName": "Test",
+      "lastName": "User",
+      "email": "testuser@example.com",
+      "phone": "9876543210",
+      "role": "vendor",
+      "country": "India",
+      "additionalInfo": "",
+      "passwordHash": "$2a$10$Gil2pbANSAgmBgxJrA99XekaZ7NQTQTN/lWtIV/1WbwyWXvI.AW6.",
+      "id": "reg1780739797683",
+      "status": "pending_otp",
+      "createdAt": "2026-06-06T09:56:37.683Z"
+    },
+    {
+      "firstName": "Test",
+      "lastName": "User",
+      "email": "testuser2@example.com",
+      "phone": "9876543210",
+      "role": "vendor",
+      "country": "India",
+      "additionalInfo": "",
+      "passwordHash": "$2a$10$eIFj.zKXssk3vVp/FLKXy.LmJklrIvxw5qLgxOzyYxdYdvhmbI/m2",
+      "id": "reg1780739809192",
+      "status": "pending_otp",
+      "createdAt": "2026-06-06T09:56:49.192Z"
+    },
+    {
+      "firstName": "tanay ",
+      "lastName": "sagar",
+      "email": "tanaysagar123@gmail.com",
+      "phone": "9574055540",
+      "role": "vendor",
+      "country": "India",
+      "additionalInfo": "pani",
+      "passwordHash": "$2a$10$oyG3RK880QHixrDcoyLU.uvTNa0lNiPem9bdpXMoWk0Zn4PhI5KUu",
+      "id": "reg1780739909589",
+      "status": "approved",
+      "createdAt": "2026-06-06T09:58:29.589Z",
+      "reviewedAt": "2026-06-06T09:59:21.754Z",
+      "reviewedBy": "admin1"
+    },
+    {
+      "firstName": "Aditya",
+      "lastName": "Nair",
+      "email": "adityanairathome@gmail.com",
+      "phone": "9825376002",
+      "role": "procurement_officer",
+      "country": "UAE",
+      "additionalInfo": "oil habibi",
+      "passwordHash": "$2a$10$k.bb0xjtEfqxDiYJAfI89.L8THbz3ft.X6I8MegbWuofnyz5VCxAi",
+      "id": "reg1780740082094",
+      "status": "approved",
+      "createdAt": "2026-06-06T10:01:22.094Z",
+      "reviewedAt": "2026-06-06T10:02:13.743Z",
+      "reviewedBy": "admin1"
+    },
+    {
+      "firstName": "Nilesh",
+      "lastName": "Shah",
+      "email": "animeamv305@gmail.com",
+      "phone": "234234234",
+      "role": "vendor",
+      "country": "United States",
+      "additionalInfo": "dqwdeqaxa",
+      "passwordHash": "$2a$10$C2Jde4MBsoFiGVhpKnAM4uL6Sd49CA.ryKMFon2krHm8PxtQX7U5u",
+      "id": "reg1780740883822",
+      "status": "approved",
+      "createdAt": "2026-06-06T10:14:43.822Z",
+      "reviewedAt": "2026-06-06T10:15:31.967Z",
+      "reviewedBy": "admin1"
+    }
+  ],
+  "savedAt": "2026-06-06T10:36:26.889Z"
+}

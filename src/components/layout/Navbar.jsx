@@ -1,6 +1,8 @@
 import { Bell } from 'lucide-react'
 import { useLocation } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
+import { useRole } from '../../hooks/useRole'
+import { ROLE_LABELS } from '../../constants/roles'
 
 const PAGE_TITLES = {
   '/dashboard': 'Dashboard',
@@ -19,6 +21,8 @@ const PAGE_TITLES = {
 export default function Navbar() {
   const location = useLocation()
   const { user } = useAuth()
+  const { role } = useRole()
+  const roleLabel = role ? ROLE_LABELS[role] || role : null
 
   const title = (() => {
     const path = location.pathname
@@ -46,6 +50,22 @@ export default function Navbar() {
           <Bell size={16} />
           <span className="absolute top-1 right-1 w-1.5 h-1.5 bg-danger rounded-full" />
         </button>
+        {/* User name + role badge */}
+        {user && (
+          <div className="flex flex-col items-end leading-tight mr-1">
+            <span className="text-xs font-medium text-text-primary">{user.name}</span>
+            {roleLabel && (
+              <span
+                id="navbar-role-badge"
+                data-role={role}
+                className="text-[10px] uppercase tracking-wide font-semibold text-primary mt-0.5"
+                title={`Signed in as ${roleLabel}`}
+              >
+                {roleLabel}
+              </span>
+            )}
+          </div>
+        )}
         {/* User avatar */}
         <div
           className="w-8 h-8 rounded-full bg-primary flex items-center justify-center"

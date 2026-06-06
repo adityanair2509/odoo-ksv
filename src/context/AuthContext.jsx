@@ -1,5 +1,5 @@
 import { createContext, useCallback, useEffect, useMemo, useState } from 'react'
-import { authLogin } from '../services/auth.service'
+import { authLogin, authGetProfile } from '../services/auth.service'
 
 /** @type {React.Context<import('../types').AuthContextValue>} */
 export const AuthContext = createContext(null)
@@ -13,11 +13,20 @@ export function AuthProvider({ children }) {
   const [token, setToken] = useState(() => localStorage.getItem('vb_token'))
   const [loading, setLoading] = useState(true)
 
-  // Rehydrate user from stored token on mount
+  // Rehydrate user from stored token on mount.
+  // Real JWTs are validated by calling /auth/me; mock tokens (used in
+  // VITE_USE_MOCK=true mode) are decoded locally.
   useEffect(() => {
     const stored = localStorage.getItem('vb_token')
-    if (stored) {
-      // Parse user from token (mock: extract from token string)
+    if (!stored) {
+      setLoading(false)
+      return
+    }
+
+    // Mock-token short-circuit: when running with VITE_USE_MOCK=true, the
+    // auth service returns synthetic tokens like 'mock-jwt-token-u2'. Decode
+    // them locally so the navbar role badge works without hitting the API.
+    if (stored.startsWith('mock-jwt-token-')) {
       const mockUsers = {
         'mock-jwt-token-u1': { id: 'u1', name: 'Admin User', email: 'admin@vendorbridge.in', role: 'admin' },
         'mock-jwt-token-u2': { id: 'u2', name: 'Priya Mehta', email: 'procurement@vendorbridge.in', role: 'procurement_officer' },
@@ -32,8 +41,33 @@ export function AuthProvider({ children }) {
         localStorage.removeItem('vb_token')
         setToken(null)
       }
+      setLoading(false)
+      return
     }
-    setLoading(false)
+
+    // Real JWT: ask the backend who this token belongs to.
+    let cancelled = false
+    authGetProfile()
+      .then((profile) => {
+        if (cancelled) return
+        setUser(profile)
+        setToken(stored)
+      })
+      .catch(() => {
+        if (cancelled) return
+        // Token rejected (expired, tampered, user deleted, etc.) — clear it
+        // so the user is redirected to /login by <ProtectedRoute />.
+        localStorage.removeItem('vb_token')
+        setUser(null)
+        setToken(null)
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false)
+      })
+
+    return () => {
+      cancelled = true
+    }
   }, [])
 
   /**

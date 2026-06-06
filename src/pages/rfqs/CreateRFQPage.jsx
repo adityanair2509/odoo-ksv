@@ -1,11 +1,14 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
-import { Trash2, Plus } from 'lucide-react'
+import { Trash2, Plus, AlertCircle } from 'lucide-react'
 import StepWizard from '../../components/ui/StepWizard'
 import Button from '../../components/ui/Button'
 import Input from '../../components/ui/Input'
 import { createRFQ } from '../../services/rfq.service'
+import { useAuth } from '../../hooks/useAuth'
+import { useRole } from '../../hooks/useRole'
+import { ROLE_LABELS } from '../../constants/roles'
 import { mockVendors } from '../../mock/mockVendors'
 
 const STEPS = [
@@ -26,7 +29,10 @@ export default function CreateRFQPage() {
   const [vendorSearch, setVendorSearch] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [itemError, setItemError] = useState('')
+  const [submitError, setSubmitError] = useState('')
 
+  const { user } = useAuth()
+  const { role, canManageRFQs } = useRole()
   const { register, handleSubmit, getValues, formState: { errors } } = useForm()
 
   const addLineItem = () => {
@@ -61,6 +67,21 @@ export default function CreateRFQPage() {
   const goBack = () => setStep((s) => Math.max(s - 1, 0))
 
   const handleSendRFQ = async () => {
+    setSubmitting(false) // reset any prior error
+    setSubmitError('')
+
+    // Defensive client-side role check — saves a round-trip and gives an
+    // immediate, friendly message instead of a silent 403.
+    if (!canManageRFQs) {
+      const roleLabel = ROLE_LABELS[role] || role || 'unknown'
+      setSubmitError(
+        `Your account is signed in as "${roleLabel}" (${user?.email || 'no email'}). ` +
+        `Only Procurement Officers and Administrators can create RFQs. ` +
+        `Please sign out and log back in with procurement@vendorbridge.in.`
+      )
+      return
+    }
+
     setSubmitting(true)
     try {
       const formData = getValues()
@@ -71,6 +92,24 @@ export default function CreateRFQPage() {
         status: 'sent',
       })
       navigate('/rfqs')
+    } catch (err) {
+      // Map known backend errors to actionable messages.
+      const status = err?.response?.status
+      const backendMessage = err?.response?.data?.message
+      if (status === 403) {
+        const roleLabel = ROLE_LABELS[role] || role || 'unknown'
+        setSubmitError(
+          `Access denied (403). Your current role is "${roleLabel}". ` +
+          `Only Procurement Officers and Administrators can create RFQs. ` +
+          `Sign out and log in with procurement@vendorbridge.in / demo123.`
+        )
+      } else if (status === 401) {
+        setSubmitError('Your session has expired. Please sign in again.')
+      } else if (status === 400 && backendMessage) {
+        setSubmitError(`Validation error: ${backendMessage}`)
+      } else {
+        setSubmitError(backendMessage || err?.message || 'Failed to create RFQ. Please try again.')
+      }
     } finally {
       setSubmitting(false)
     }
@@ -90,6 +129,17 @@ export default function CreateRFQPage() {
       <div className="bg-surface border border-border rounded-lg p-6">
         <StepWizard steps={STEPS} current={step} />
       </div>
+
+      {/* Submit error (e.g. 403 forbidden) */}
+      {submitError && (
+        <div
+          role="alert"
+          className="flex items-start gap-3 bg-red-50 border border-red-200 text-danger rounded-lg p-4 max-w-2xl"
+        >
+          <AlertCircle size={18} className="mt-0.5 flex-shrink-0" />
+          <div className="text-sm leading-relaxed whitespace-pre-line">{submitError}</div>
+        </div>
+      )}
 
       {/* Step content */}
       <div className="bg-surface border border-border rounded-lg p-6 max-w-2xl">

@@ -7,9 +7,12 @@
         "dev": "tsx watch src/index.ts",
         "build": "tsc",
         "start": "node dist/index.js",
+        "start:prod": "node dist/scripts/migrate.js && node dist/index.js",
+        "db:migrate": "tsx src/scripts/migrate.ts",
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
+        "pg": "^8.13.1",
         "bcryptjs": "^2.4.3",
         "cors": "^2.8.5",
         "dotenv": "^16.4.5",
@@ -25,6 +28,7 @@
         "@types/express": "^4.17.21",
         "@types/jsonwebtoken": "^9.0.7",
         "@types/node": "^22.9.0",
+        "@types/pg": "^8.11.10",
         "@types/nodemailer": "^6.4.17",
         "@types/pdfkit": "^0.17.6",
         "tsx": "^4.19.2",

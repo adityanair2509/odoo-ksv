@@ -49,6 +49,7 @@ const EnvSchema = z.object({
     DB_NAME: z.string().default('vendorbridge'),
     DB_USER: z.string().default('postgres'),
     DB_PASSWORD: z.string().optional(),
+    DATABASE_URL: z.string().optional(),
 })
 
 const parsed = EnvSchema.safeParse(process.env)

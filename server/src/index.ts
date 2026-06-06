@@ -56,10 +56,7 @@ app.get('/api/health', (_req, res) => {
         status: 'ok',
         uptime: process.uptime(),
         ts: new Date().toISOString(),
-        database: {
-            type: 'json-file',
-            ...persistence,
-        },
+        database: persistence,
         email: {
             configured: getEmailService().isConfigured,
         },
